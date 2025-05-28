@@ -23,8 +23,8 @@ class TextInput extends createjs.Container {
     this._placeHolderText = null;
     this._visiblePreCursorText = null;
     this._visiblePostCursorText = null;
-    this._preCursorText = "";
-    this._postCursorText = "";
+    this._preCursorText = '';
+    this._postCursorText = '';
     this._cursor = null;
     this._padding = 0;
     this._focused = false;
@@ -95,7 +95,8 @@ class TextInput extends createjs.Container {
         this._getFontStyle(),
         this.textColor
       );
-      this._visiblePreCursorText.y = this._visiblePreCursorText.x = this._padding;
+      this._visiblePreCursorText.y = this._visiblePreCursorText.x =
+        this._padding;
       this.addChild(this._visiblePreCursorText);
     } else {
       this._visiblePreCursorText.text = this._preCursorText;
@@ -107,7 +108,8 @@ class TextInput extends createjs.Container {
         this._getFontStyle(),
         this.textColor
       );
-      this._visiblePostCursorText.y = this._visiblePostCursorText.x = this._padding;
+      this._visiblePostCursorText.y = this._visiblePostCursorText.x =
+        this._padding;
       this.addChild(this._visiblePostCursorText);
     } else {
       this._visiblePostCursorText.text = this._postCursorText;
@@ -119,13 +121,17 @@ class TextInput extends createjs.Container {
       this._cursor = new createjs.Shape();
       this._cursor.graphics
         .beginFill(this.cursorColor)
-        .drawRect(this._padding, this.fontSize * .25, this.cursorWidth, this.fontSize * 1.5);
+        .drawRect(
+          this._padding,
+          this.fontSize * 0.25,
+          this.cursorWidth,
+          this.fontSize * 1.5
+        );
       this._cursor.x = 0; // this will signify pure text offset
       this._cursor.visible = false;
       this.addChild(this._cursor);
     } else {
 
-    }
   }
 
   _setupListeners() {
@@ -134,14 +140,16 @@ class TextInput extends createjs.Container {
       const pX = e.pageX;
       const pY = e.pageY;
       // Canvas
-      if (this.stage === null) return;
+      if (this.stage === null) {
+        return;
+      }
       const cX = this.stage.canvas.offsetLeft;
       const cY = this.stage.canvas.offsetTop;
       // Local
       const lX = pX - cX - this.x;
       const lY = pY - cY - this.y;
 
-      this._click({x: lX, y: lY});
+      this._click({ x: lX, y: lY });
     });
     this._hiddenInput.addEventListener('input', (e) => {
       if (this._focused) {
@@ -156,15 +164,15 @@ class TextInput extends createjs.Container {
   }
 
   _click(localXY) {
-    this._focused = (
+    this._focused =
       localXY.x > 0 &&
       localXY.y > 0 &&
       localXY.x < this.width &&
-      localXY.y < this.height
-    );
+      localXY.y < this.height;
     this._selectedDuration = 0;
 
-    this._placeHolderText.visible = !this._focused && this._hiddenInput.value === "";
+    this._placeHolderText.visible =
+      !this._focused && this._hiddenInput.value === '';
     if (this._focused) {
       this._selectInput();
     } else {
@@ -184,8 +192,10 @@ class TextInput extends createjs.Container {
 
   _selectInput() {
     this._hiddenInput.style.display = 'block';
-    this._hiddenInput.style.left = (this.x + this.stage.canvas.offsetLeft + this._padding) + 'px';
-    this._hiddenInput.style.top = (this.y + this.stage.canvas.offsetTop + this._padding) + 'px';
+    this._hiddenInput.style.left =
+      this.x + this.stage.canvas.offsetLeft + this._padding + 'px';
+    this._hiddenInput.style.top =
+      this.y + this.stage.canvas.offsetTop + this._padding + 'px';
     this._hiddenInput.focus();
   }
 
