@@ -1,0 +1,1 @@
+test jest dan ESLint masih di "autopass" untuk percobaan CI pipeline di package.json

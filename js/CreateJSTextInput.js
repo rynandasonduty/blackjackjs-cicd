@@ -131,7 +131,7 @@ class TextInput extends createjs.Container {
       this._cursor.visible = false;
       this.addChild(this._cursor);
     } else {
-
+    }
   }
 
   _setupListeners() {

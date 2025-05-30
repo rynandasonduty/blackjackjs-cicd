@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "description": "Black jack game made in Javascript with CreateJs   [demo](https://oli8.github.io/BlackJackJs)",
   "main": "index.js",
+
   "scripts": {
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "test": "jest"
+  "lint": "eslint .",
+  "format": "prettier --write .",
+  "format:check": "prettier --check .",
+  "audit": "npm audit --audit-level=high",
+  "test": "jest --coverage --passWithNoTests" 
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",

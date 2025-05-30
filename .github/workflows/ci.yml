@@ -1,0 +1,40 @@
+name: CI - BlackJackJS
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run ESLint
+      run: npm run lint
+
+    - name: Run Prettier Fix (Auto-format code)
+      run: npm run format
+
+    - name: Check formatting after fix
+      run: npm run format:check
+
+    - name: Run NPM Audit
+      run: npm run audit
+
+    - name: Run Tests with Coverage
+      run: npm run test
+
+    - name: Upload Code Coverage to GitHub Summary
+      if: always()
+      run: |
+        echo "### Code Coverage Report" >> $GITHUB_STEP_SUMMARY
+        npx istanbul-reports text-summary -t coverage >> $GITHUB_STEP_SUMMARY
