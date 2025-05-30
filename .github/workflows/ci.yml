@@ -1,4 +1,4 @@
-name: CI - BlackJackJS
+name: CI - Linting, Formatting, Testing
 
 on:
   push:
