@@ -12,13 +12,13 @@ Click on a chip to place your bet and start the game!
 
 ### 💰 Chip Values:
 
-| Value | Image |
-|-------|--------|
-| 500   | ![500](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipBlueWhite_side.png) |
+| Value | Image                                                                                                      |
+| ----- | ---------------------------------------------------------------------------------------------------------- |
+| 500   | ![500](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipBlueWhite_side.png)  |
 | 100   | ![100](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipBlackWhite_side.png) |
-| 25    | ![25](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipGreenWhite_side.png) |
-| 5     | ![5](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipRedWhite_side.png) |
-| 1     | ![1](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipWhiteBlue_side.png) |
+| 25    | ![25](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipGreenWhite_side.png)  |
+| 5     | ![5](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipRedWhite_side.png)     |
+| 1     | ![1](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipWhiteBlue_side.png)    |
 
 ### 🔧 Game Features
 
@@ -35,6 +35,7 @@ Click on a chip to place your bet and start the game!
 ### 📁 Branches
 
 - **`main`**:
+
   - Main development branch.
   - Every commit triggers **CI (Continuous Integration)**.
   - If all CI steps pass, changes are **automatically merged into `production`**.

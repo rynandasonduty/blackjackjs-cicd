@@ -1,5 +1,5 @@
 function init() {
-  var stage = new createjs.Stage('canvas');
+  const stage = new createjs.Stage('canvas');
 
   var game = {
     deck: [],
@@ -8,7 +8,7 @@ function init() {
       black: 100,
       green: 25,
       red: 5,
-      white: 1,
+      white: 1
     },
     startContainer: false,
     buttons: [
@@ -19,7 +19,7 @@ function init() {
       //new Button('Split', '#fff', 100, -40, () => l('split')),
       new Button('Double', '#fff', 100, -40, () => player.double()),
       new Button('Give up', '#fff', 100, 0, () => player.giveUp()),
-      new Button('New game', '#fff', 100, -490, () => game.reset()),
+      new Button('New game', '#fff', 100, -490, () => game.reset())
     ],
     buttonContainer: false,
     dealtChipContainer: false,
@@ -29,7 +29,7 @@ function init() {
       black: 0,
       green: 0,
       red: 0,
-      white: 0,
+      white: 0
     },
     resetChips: function () {
       Object.keys(this.dealt).forEach((color) => (this.dealt[color] = 0));
@@ -41,11 +41,11 @@ function init() {
         this.text.x = 850;
         this.text.y = 0;
         stage.addChild(this.text);
-      },
+      }
     },
 
     _alert: function (msg) {
-      var alertText = new createjs.Text(msg.msg, '30px Arial', 'orange');
+      const alertText = new createjs.Text(msg.msg, '30px Arial', 'orange');
       alertText.x = msg.x || 745;
       alertText.y = 120;
       stage.addChild(alertText);
@@ -66,12 +66,12 @@ function init() {
         localStorage.removeItem('BlackJackJs-' + v)
       );
       stage.removeAllChildren();
-      var gameOverText = new createjs.Text('Game Over', '50px Arial', '#fff');
+      const gameOverText = new createjs.Text('Game Over', '50px Arial', '#fff');
       gameOverText.center(1, 1);
-      var replayText = new createjs.Text('Replay', '30px Arial', '#fff');
+      const replayText = new createjs.Text('Replay', '30px Arial', '#fff');
       replayText.center(1);
       replayText.y = 400;
-      var hit = new createjs.Shape();
+      const hit = new createjs.Shape();
       hit.graphics
         .beginFill('#000')
         .drawRect(
@@ -92,12 +92,12 @@ function init() {
     },
 
     balanceChips: function (value) {
-      var chips = {
+      const chips = {
         blue: 0,
         black: 0,
         green: 0,
         red: 0,
-        white: 0,
+        white: 0
       };
 
       while (value !== 0) {
@@ -129,9 +129,9 @@ function init() {
         this.start();
       } else {
         this.startContainer = new createjs.Container();
-        var titleText = new createjs.Text('BlackJackJs', '60px Arial', '#fff');
+        const titleText = new createjs.Text('BlackJackJs', '60px Arial', '#fff');
         titleText.center(1, 1);
-        var nameInput = new TextInput();
+        const nameInput = new TextInput();
         // autofocus
         nameInput._focused = true;
         nameInput._hiddenInput.style.display = 'block';
@@ -144,11 +144,11 @@ function init() {
         nameInput.y = 400;
         nameInput._visiblePostCursorText.text = 'Your name';
 
-        var submitText = new createjs.Text('OK', '30px Arial', '#fff');
+        const submitText = new createjs.Text('OK', '30px Arial', '#fff');
         submitText.x = 640;
         submitText.y = 403;
         submitText.cursor = 'Pointer';
-        var hit = new createjs.Shape();
+        const hit = new createjs.Shape();
         hit.graphics
           .beginFill('#000')
           .drawRect(
@@ -240,7 +240,7 @@ function init() {
 
     buildDeck: function () {
       for (let i = 0; i < deckNumber; i++) {
-        for (var suit of suits) {
+        for (const suit of suits) {
           for (let i = 2; i < 11; i++) {
             this.deck.push(new Card(suit, i));
           }
@@ -253,7 +253,7 @@ function init() {
     },
 
     deckValue: function (deck) {
-      var total = 0;
+      let total = 0;
 
       deck.forEach(function (card) {
         if (card.value >= 2 && card.value < 11) {
@@ -271,8 +271,8 @@ function init() {
     },
 
     distributeCard: function (to, hidden = false) {
-      var index = rand(0, this.deck.length - 1);
-      var card = this.deck[index];
+      const index = rand(0, this.deck.length - 1);
+      const card = this.deck[index];
       if (hidden) {
         card.hidden = true;
       }
@@ -341,10 +341,10 @@ function init() {
       stage.addChild(this.buttonContainer);
 
       this.buttons.forEach(function (b) {
-        var button = new createjs.Text(b.text, '30px Arial', b.color);
+        const button = new createjs.Text(b.text, '30px Arial', b.color);
         button.x = b.x;
         button.y = b.y;
-        var hit = new createjs.Shape();
+        const hit = new createjs.Shape();
         hit.graphics
           .beginFill('#000')
           .drawRect(
@@ -377,10 +377,10 @@ function init() {
         player.chipsContainer.removeAllChildren();
       }
 
-      var base = { x: 100, y: 45 };
-      for (var chip in player.chips) {
+      const base = { x: 100, y: 45 };
+      for (const chip in player.chips) {
         for (let i = 0; i < player.chips[chip]; i++) {
-          var chipImg = new createjs.Bitmap(imgs.chips.get(chip, 'side'));
+          const chipImg = new createjs.Bitmap(imgs.chips.get(chip, 'side'));
           chipImg.x = base.x;
           chipImg.y = base.y;
           chipImg.color = chip;
@@ -429,7 +429,7 @@ function init() {
         750,
         createjs.Ease.getPowInOut(1)
       );
-      var color = chip.color;
+      const color = chip.color;
       player.dealt += this.chipsValue[color]; //add chip value to player.dealt
       player.chips[color] -= 1; //Reduce player chips number
       player.funds -= game.chipsValue[color];
@@ -439,8 +439,8 @@ function init() {
     },
 
     check: function () {
-      var bankScore = this.deckValue(bank.deck);
-      var playerScore = this.deckValue(player.deck);
+      const bankScore = this.deckValue(bank.deck);
+      const playerScore = this.deckValue(player.deck);
 
       if (bankScore === 21 && bank.deck.length === 2) {
         bank.blackjack = true;
@@ -466,7 +466,7 @@ function init() {
           player.lose();
         }
       }
-    },
+    }
   };
 
   var bank = {
@@ -489,7 +489,7 @@ function init() {
         );
       }
 
-      var total = game.deckValue(this.deck);
+      const total = game.deckValue(this.deck);
       if (total < 17) {
         game.distributeCard('bank');
         if (game.deckValue(this.deck) < 17) {
@@ -500,14 +500,14 @@ function init() {
       } else {
         game.check();
       }
-    },
+    }
   };
 
   var player = {
     deck: [],
     name: {
       value: 'Player 1',
-      text: false,
+      text: false
     },
     cardsContainer: false,
     chipsContainer: false,
@@ -525,7 +525,7 @@ function init() {
       },
       update: function () {
         this.text.text = player.funds;
-      },
+      }
     },
     betted: false,
     dealt: 0,
@@ -581,7 +581,7 @@ function init() {
           for (var chip in game.dealt) {
             //update graphic dealtcontainer
             for (let i = 0; i < game.dealt[chip]; i++) {
-              var chipImg = new createjs.Bitmap(imgs.chips.get(chip, 'side'));
+              const chipImg = new createjs.Bitmap(imgs.chips.get(chip, 'side'));
               chipImg.x = rand(350, 675);
               chipImg.y = rand(190, 350);
               chipImg.color = chip;
@@ -666,7 +666,7 @@ function init() {
     store: function () {
       localStorage.setItem('BlackJackJs-funds', this.funds);
       localStorage.setItem('BlackJackJs-chips', JSON.stringify(this.chips));
-    },
+    }
   };
 
   function tick() {

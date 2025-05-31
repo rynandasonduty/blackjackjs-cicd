@@ -1,7 +1,7 @@
-/**
- * Created by Andrew on 3/19/16.
- */
 class TextInput extends createjs.Container {
+  /**
+   * Creates a new TextInput instance
+   */
   constructor() {
     super();
 
@@ -35,14 +35,26 @@ class TextInput extends createjs.Container {
     this._setupListeners();
   }
 
+  /**
+   * Update the text input field
+   */
   update() {
     this._setupField();
   }
 
+  /**
+   * Get font style string
+   * @returns {string} Font style
+   * @private
+   */
   _getFontStyle() {
     return '20px Arial';
   }
 
+  /**
+   * Setup hidden DOM input element
+   * @private
+   */
   _setupDomNode() {
     this._hiddenInput = document.createElement('input');
     this._hiddenInput.type = 'text';
@@ -52,6 +64,10 @@ class TextInput extends createjs.Container {
     document.body.appendChild(this._hiddenInput);
   }
 
+  /**
+   * Setup the entire field
+   * @private
+   */
   _setupField() {
     this._setupVariables();
     this._setupBg();
@@ -60,10 +76,18 @@ class TextInput extends createjs.Container {
     this._setupCursor();
   }
 
+  /**
+   * Setup internal variables
+   * @private
+   */
   _setupVariables() {
     this._padding = this.height - this.fontSize * 1.5;
   }
 
+  /**
+   * Setup background graphics
+   * @private
+   */
   _setupBg() {
     if (this._bg === null) {
       this._bg = new createjs.Shape();
@@ -74,6 +98,10 @@ class TextInput extends createjs.Container {
     this._bg.graphics.beginFill('#ccc').drawRect(0, 0, this.width, this.height);
   }
 
+  /**
+   * Setup placeholder text
+   * @private
+   */
   _setupPlaceHolderText() {
     if (this._placeHolderText === null) {
       this._placeHolderText = new createjs.Text(
@@ -81,13 +109,18 @@ class TextInput extends createjs.Container {
         this._getFontStyle(),
         this.placeHolderTextColor
       );
-      this._placeHolderText.y = this._placeHolderText.x = this._padding;
+      this._placeHolderText.y = this._padding;
+      this._placeHolderText.x = this._padding;
       this.addChild(this._placeHolderText);
     } else {
       this._placeHolderText.text = this.placeHolder;
     }
   }
 
+  /**
+   * Setup visible text elements
+   * @private
+   */
   _setupVisibleText() {
     if (this._visiblePreCursorText === null) {
       this._visiblePreCursorText = new createjs.Text(
@@ -95,8 +128,8 @@ class TextInput extends createjs.Container {
         this._getFontStyle(),
         this.textColor
       );
-      this._visiblePreCursorText.y = this._visiblePreCursorText.x =
-        this._padding;
+      this._visiblePreCursorText.y = this._padding;
+      this._visiblePreCursorText.x = this._padding;
       this.addChild(this._visiblePreCursorText);
     } else {
       this._visiblePreCursorText.text = this._preCursorText;
@@ -108,14 +141,18 @@ class TextInput extends createjs.Container {
         this._getFontStyle(),
         this.textColor
       );
-      this._visiblePostCursorText.y = this._visiblePostCursorText.x =
-        this._padding;
+      this._visiblePostCursorText.y = this._padding;
+      this._visiblePostCursorText.x = this._padding;
       this.addChild(this._visiblePostCursorText);
     } else {
       this._visiblePostCursorText.text = this._postCursorText;
     }
   }
 
+  /**
+   * Setup cursor graphics
+   * @private
+   */
   _setupCursor() {
     if (this._cursor === null) {
       this._cursor = new createjs.Shape();
@@ -130,27 +167,33 @@ class TextInput extends createjs.Container {
       this._cursor.x = 0; // this will signify pure text offset
       this._cursor.visible = false;
       this.addChild(this._cursor);
-    } else {
     }
   }
 
+  /**
+   * Setup event listeners
+   * @private
+   */
   _setupListeners() {
     window.addEventListener('click', (e) => {
-      // Page
+      // Page coordinates
       const pX = e.pageX;
       const pY = e.pageY;
-      // Canvas
+
+      // Canvas coordinates
       if (this.stage === null) {
         return;
       }
       const cX = this.stage.canvas.offsetLeft;
       const cY = this.stage.canvas.offsetTop;
-      // Local
+
+      // Local coordinates
       const lX = pX - cX - this.x;
       const lY = pY - cY - this.y;
 
       this._click({ x: lX, y: lY });
     });
+
     this._hiddenInput.addEventListener('input', (e) => {
       if (this._focused) {
         e.preventDefault();
@@ -160,9 +203,16 @@ class TextInput extends createjs.Container {
       }
     });
 
-    this.on('tick', () => this._tick);
+    this.on('tick', () => this._tick());
   }
 
+  /**
+   * Handle click events
+   * @param {Object} localXY - Local coordinates
+   * @param {number} localXY.x - X coordinate
+   * @param {number} localXY.y - Y coordinate
+   * @private
+   */
   _click(localXY) {
     this._focused =
       localXY.x > 0 &&
@@ -173,6 +223,7 @@ class TextInput extends createjs.Container {
 
     this._placeHolderText.visible =
       !this._focused && this._hiddenInput.value === '';
+
     if (this._focused) {
       this._selectInput();
     } else {
@@ -181,25 +232,40 @@ class TextInput extends createjs.Container {
     }
   }
 
+  /**
+   * Handle tick events for cursor blinking
+   * @private
+   */
   _tick() {
     if (this._focused) {
       if (this._selectedDuration % 8 === 0) {
         this._cursor.visible = !this._cursor.visible;
       }
-      this._selectedDuration++;
+      this._selectedDuration += 1;
     }
   }
 
+  /**
+   * Show and focus the hidden input
+   * @private
+   */
   _selectInput() {
     this._hiddenInput.style.display = 'block';
-    this._hiddenInput.style.left =
-      this.x + this.stage.canvas.offsetLeft + this._padding + 'px';
-    this._hiddenInput.style.top =
-      this.y + this.stage.canvas.offsetTop + this._padding + 'px';
+    this._hiddenInput.style.left = `${this.x + this.stage.canvas.offsetLeft + this._padding}px`;
+    this._hiddenInput.style.top = `${this.y + this.stage.canvas.offsetTop + this._padding}px`;
     this._hiddenInput.focus();
   }
 
+  /**
+   * Hide the hidden input
+   * @private
+   */
   _deSelectInput() {
     this._hiddenInput.style.display = 'none';
   }
+}
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = TextInput;
 }
