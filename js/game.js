@@ -2,17 +2,20 @@
 // Assuming these are defined in other files or globally
 /* global Button, TextInput, deckNumber, suits, Card, rand, tick */
 
+// Declare global game object for testing
+let game;
+
 function init() {
   const stage = new createjs.Stage('canvas');
 
-  const game = {
+  game = {
     deck: [],
     chipsValue: {
       blue: 500,
       black: 100,
       green: 25,
       red: 5,
-      white: 1
+      white: 1,
     },
     startContainer: false,
     buttons: [
@@ -23,7 +26,7 @@ function init() {
       // new Button('Split', '#fff', 100, -40, () => l('split')),
       new Button('Double', '#fff', 100, -40, () => player.double()),
       new Button('Give up', '#fff', 100, 0, () => player.giveUp()),
-      new Button('New game', '#fff', 100, -490, () => game.reset())
+      new Button('New game', '#fff', 100, -490, () => game.reset()),
     ],
     buttonContainer: false,
     dealtChipContainer: false,
@@ -33,7 +36,7 @@ function init() {
       black: 0,
       green: 0,
       red: 0,
-      white: 0
+      white: 0,
     },
     resetChips() {
       Object.keys(this.dealt).forEach((color) => {
@@ -47,7 +50,7 @@ function init() {
         this.text.x = 850;
         this.text.y = 0;
         stage.addChild(this.text);
-      }
+      },
     },
 
     _alert(msg) {
@@ -105,7 +108,7 @@ function init() {
         black: 0,
         green: 0,
         red: 0,
-        white: 0
+        white: 0,
       };
 
       while (value !== 0) {
@@ -138,16 +141,18 @@ function init() {
         this.start();
       } else {
         this.startContainer = new createjs.Container();
-        const titleText = new createjs.Text('BlackJackJs', '60px Arial', '#fff');
+        const titleText = new createjs.Text(
+          'BlackJackJs',
+          '60px Arial',
+          '#fff'
+        );
         titleText.center(1, 1);
         const nameInput = new TextInput();
         // autofocus
         nameInput._focused = true;
         nameInput._hiddenInput.style.display = 'block';
-        nameInput._hiddenInput.style.left =
-          `${nameInput.x + stage.canvas.offsetLeft + nameInput._padding}px`;
-        nameInput._hiddenInput.style.top =
-          `${nameInput.y + stage.canvas.offsetTop + nameInput._padding}px`;
+        nameInput._hiddenInput.style.left = `${nameInput.x + stage.canvas.offsetLeft + nameInput._padding}px`;
+        nameInput._hiddenInput.style.top = `${nameInput.y + stage.canvas.offsetTop + nameInput._padding}px`;
         nameInput._hiddenInput.focus();
         nameInput.x = 430;
         nameInput.y = 400;
@@ -489,7 +494,7 @@ function init() {
           player.lose();
         }
       }
-    }
+    },
   };
 
   const bank = {
@@ -523,14 +528,14 @@ function init() {
       } else {
         game.check();
       }
-    }
+    },
   };
 
   const player = {
     deck: [],
     name: {
       value: 'Player 1',
-      text: false
+      text: false,
     },
     cardsContainer: false,
     chipsContainer: false,
@@ -548,7 +553,7 @@ function init() {
       },
       update() {
         this.text.text = player.funds;
-      }
+      },
     },
     betted: false,
     dealt: 0,
@@ -605,7 +610,9 @@ function init() {
             // update graphic dealtcontainer
             if (Object.prototype.hasOwnProperty.call(game.dealt, chip)) {
               for (let i = 0; i < game.dealt[chip]; i++) {
-                const chipImg = new createjs.Bitmap(imgs.chips.get(chip, 'side'));
+                const chipImg = new createjs.Bitmap(
+                  imgs.chips.get(chip, 'side')
+                );
                 chipImg.x = rand(350, 675);
                 chipImg.y = rand(190, 350);
                 chipImg.color = chip;
@@ -693,7 +700,7 @@ function init() {
     store() {
       localStorage.setItem('BlackJackJs-funds', this.funds);
       localStorage.setItem('BlackJackJs-chips', JSON.stringify(this.chips));
-    }
+    },
   };
 
   function tick() {
@@ -701,4 +708,11 @@ function init() {
   }
 
   game.startScreen();
+}
+
+// Export game object for testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { init, game };
+} else if (typeof global !== 'undefined') {
+  global.game = game;
 }

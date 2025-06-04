@@ -10,7 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "audit": "npm audit --audit-level=high",
-    "test": "jest --coverage --passWithNoTests",
+    "test": "jest --coverage",
     "fix-all": "npm run lint:fix && npm run format"
   },
   "keywords": [
