@@ -485,4 +485,4 @@ Thanks for checking it out!
 
 ---
 
-_This documentation should be updated whenever pipeline configurations change. Last updated:09.06.2025_
+_This documentation should be updated whenever pipeline configurations change. Last updated: [09/06/2025]_
