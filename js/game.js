@@ -38,6 +38,13 @@ function init() {
       red: 0,
       white: 0,
     },
+    // --- PENAMBAHAN: Objek untuk mengontrol alur game ---
+    gameControl: {
+      gamesPlayed: 0,
+      phase: 1, // 1: 3x menang, 2: berbasis taruhan
+      consecutiveLosses: 0,
+      needTwoLosses: false,
+    },
     resetChips() {
       Object.keys(this.dealt).forEach((color) => {
         this.dealt[color] = 0;
@@ -67,6 +74,13 @@ function init() {
       ['userName', 'chips', 'funds'].forEach((v) =>
         localStorage.removeItem(`BlackJackJs-${v}`)
       );
+      // --- MODIFIKASI: Reset game control state ---
+      this.gameControl = {
+        gamesPlayed: 0,
+        phase: 1,
+        consecutiveLosses: 0,
+        needTwoLosses: false,
+      };
       location.reload();
     },
 
@@ -218,6 +232,7 @@ function init() {
       }
     },
 
+    // --- MODIFIKASI: Menambahkan logika transisi fase ---
     end() {
       game.dealtChipContainer.removeAllChildren();
       game.inProgress = false;
@@ -236,6 +251,15 @@ function init() {
       bank.cardsContainer.removeAllChildren();
       player.cardsContainer.removeAllChildren();
       this.message.text.text = messages.bet;
+
+      this.gameControl.gamesPlayed++;
+      if (
+        this.gameControl.phase === 1 &&
+        this.gameControl.gamesPlayed >= 3 &&
+        !this.gameControl.needTwoLosses
+      ) {
+        this.gameControl.phase = 2;
+      }
     },
 
     new() {
@@ -283,7 +307,6 @@ function init() {
         }
       });
 
-      // Handle aces properly - convert from 11 to 1 if total > 21
       while (total > 21 && aces > 0) {
         total -= 10;
         aces--;
@@ -292,9 +315,121 @@ function init() {
       return total;
     },
 
+    // --- PENAMBAHAN: Fungsi untuk menentukan hasil ronde ---
+    shouldPlayerWin() {
+      const currentBet = player.dealt;
+      const playerFunds = player.funds;
+      const CHIP_TRIGGER = 2000;
+
+      if (this.gameControl.phase === 1) {
+        if (playerFunds >= CHIP_TRIGGER && !this.gameControl.needTwoLosses) {
+          this.gameControl.needTwoLosses = true;
+          this.gameControl.consecutiveLosses = 0;
+        }
+        if (this.gameControl.needTwoLosses) {
+          if (this.gameControl.consecutiveLosses < 2) {
+            return false; // Kalah
+          } else {
+            this.gameControl.needTwoLosses = false;
+            this.gameControl.consecutiveLosses = 0;
+            return true; // Kembali menang
+          }
+        }
+        return true; // Selalu menang di fase 1
+      }
+
+      if (this.gameControl.phase === 2) {
+        if (playerFunds >= CHIP_TRIGGER) {
+          return false; // Selalu kalah jika chip >= 2000
+        }
+        if (currentBet < 100) {
+          return true; // Menang jika bet < 100
+        } else {
+          return false; // Kalah jika bet >= 100
+        }
+      }
+      return true; // Fallback
+    },
+
+    // --- PENAMBAHAN: Fungsi-fungsi helper untuk mengendalikan kartu ---
+    getCardNumericValue(card) {
+      if (card.value >= 2 && card.value <= 10) {
+        return card.value;
+      }
+      if (['J', 'Q', 'K'].includes(card.value)) {
+        return 10;
+      }
+      if (card.value === 'A') {
+        return 11;
+      }
+      return 0;
+    },
+
+    getPlayerCard(availableCards, shouldWin) {
+      const currentTotal = this.deckValue(player.deck);
+      if (shouldWin) {
+        if (currentTotal <= 16) {
+          const safeCards = availableCards.filter(
+            (card) => currentTotal + this.getCardNumericValue(card) <= 21
+          );
+          if (safeCards.length > 0) {
+            return safeCards[rand(0, safeCards.length - 1)];
+          }
+        }
+      } else {
+        if (currentTotal >= 12) {
+          const bustCards = availableCards.filter(
+            (card) => currentTotal + this.getCardNumericValue(card) > 21
+          );
+          if (bustCards.length > 0) {
+            return bustCards[rand(0, bustCards.length - 1)];
+          }
+        }
+      }
+      return availableCards[rand(0, availableCards.length - 1)];
+    },
+
+    getBankCard(availableCards, shouldWin) {
+      const bankTotal = this.deckValue(bank.deck);
+      const playerTotal = this.deckValue(player.deck);
+
+      if (shouldWin) {
+        // Bank harus kalah atau bust
+        if (bankTotal >= 12 && bankTotal <= 16) {
+          const bustCards = availableCards.filter(
+            (card) => bankTotal + this.getCardNumericValue(card) > 21
+          );
+          if (bustCards.length > 0) {
+            return bustCards[rand(0, bustCards.length - 1)];
+          }
+        }
+      } else {
+        // Bank harus menang
+        const goodCards = availableCards.filter((card) => {
+          const newTotal = bankTotal + this.getCardNumericValue(card);
+          return newTotal >= playerTotal && newTotal <= 21;
+        });
+        if (goodCards.length > 0) {
+          return goodCards[rand(0, goodCards.length - 1)];
+        }
+      }
+      return availableCards[rand(0, availableCards.length - 1)];
+    },
+
+    getControlledCard(targetDeck, desiredOutcome) {
+      const availableCards = [...this.deck];
+      if (targetDeck === 'player') {
+        return this.getPlayerCard(availableCards, desiredOutcome);
+      } else {
+        return this.getBankCard(availableCards, desiredOutcome);
+      }
+    },
+
+    // --- MODIFIKASI: `distributeCard` sekarang menggunakan logika kontrol ---
     distributeCard(to, hidden = false) {
-      const index = rand(0, this.deck.length - 1);
-      const card = this.deck[index];
+      const shouldWin = this.shouldPlayerWin();
+      const card = this.getControlledCard(to, shouldWin);
+
       if (hidden) {
         card.hidden = true;
       }
@@ -305,7 +440,13 @@ function init() {
         player.deck.push(card);
       }
 
-      this.deck.splice(index, 1);
+      const cardIndex = this.deck.findIndex(
+        (c) => c.suit === card.suit && c.value === card.value
+      );
+      if (cardIndex > -1) {
+        this.deck.splice(cardIndex, 1);
+      }
+
       this.displayCard(card, to);
     },
 
@@ -410,11 +551,9 @@ function init() {
             chipImg.y = base.y;
             chipImg.color = chip;
             chipImg.dealt = false;
-            // chipImg.shadow = new createjs.Shadow("#000000", 3, 3, 5); //too laggy :/
             player.chipsContainer.addChild(chipImg);
             base.y -= 10;
             if (i === player.chips[chip] - 1) {
-              // add click event on top chip
               chipImg.cursor = 'Pointer';
               chipImg.on('mouseover', (event) => {
                 event.currentTarget.scaleX = 1.1;
@@ -442,7 +581,6 @@ function init() {
         return;
       }
       chip.dealt = true;
-      // remove chip from player.chipsContainer and add it to another container
       createjs.Sound.play('chip');
       player.chipsContainer.removeChildAt(
         player.chipsContainer.getChildIndex(chip)
@@ -456,8 +594,8 @@ function init() {
         createjs.Ease.getPowInOut(1)
       );
       const color = chip.color;
-      player.dealt += this.chipsValue[color]; // add chip value to player.dealt
-      player.chips[color] -= 1; // Reduce player chips number
+      player.dealt += this.chipsValue[color];
+      player.chips[color] -= 1;
       player.funds -= game.chipsValue[color];
       player.fundsText.update();
       game.dealt[color] += 1;
@@ -607,7 +745,6 @@ function init() {
           this.store();
           game.addChips();
           for (const chip in game.dealt) {
-            // update graphic dealtcontainer
             if (Object.prototype.hasOwnProperty.call(game.dealt, chip)) {
               for (let i = 0; i < game.dealt[chip]; i++) {
                 const chipImg = new createjs.Bitmap(
@@ -652,6 +789,11 @@ function init() {
     },
 
     win() {
+      // --- MODIFIKASI: Reset status hukuman saat menang ---
+      if (game.gameControl.needTwoLosses) {
+        game.gameControl.needTwoLosses = false;
+        game.gameControl.consecutiveLosses = 0;
+      }
       game.message.text.text = messages.win;
       setTimeout(() => {
         createjs.Sound.play('win');
@@ -662,6 +804,10 @@ function init() {
     },
 
     lose() {
+      // --- MODIFIKASI: Tambah penghitung kekalahan jika dalam mode hukuman ---
+      if (game.gameControl.needTwoLosses) {
+        game.gameControl.consecutiveLosses++;
+      }
       game.message.text.text = messages.lose;
       if (this.doubled && this.deck.length === 3) {
         this.cardsContainer.children[2].image.src = imgs.cards.get(
@@ -710,7 +856,7 @@ function init() {
   game.startScreen();
 }
 
-// Export game object for testing
+// Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { init, game };
 } else if (typeof global !== 'undefined') {
