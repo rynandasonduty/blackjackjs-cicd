@@ -1,29 +1,147 @@
 <!doctype html>
-<html>
+<html lang="id">
   <head>
-    <title>Black Jack</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlackJackJS - Game Kartu Blackjack</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="assets/PNG/Cards/cardClubsJ.png" type="image/png" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Raleway:400,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body onload="init()">
-    <canvas id="canvas" width="1100" height="650"></canvas>
-    <div>
-      <a
-        class="github-button"
-        href="https://github.com/Oli8/BlackJackJs"
-        data-icon="octicon-star"
-        data-style="mega"
-        aria-label="Star Oli8/BlackJackJs on GitHub"
-        >Star</a
-      >
+    <nav class="navbar">
+      <h1 class="nav-title">BlackJackJS</h1>
+      <button id="help-button" class="nav-button">Help</button>
+    </nav>
+
+    <main id="game-container">
+      <canvas id="canvas" width="1100" height="650"></canvas>
+    </main>
+
+    <div id="help-modal-overlay">
+      <div id="help-modal-content">
+        <button id="close-modal-button" class="close-button">&times;</button>
+        <h2>Cara Bermain</h2>
+        <p>
+          Tujuan permainan ini adalah untuk mendapatkan total nilai kartu
+          sedekat mungkin dengan 21 tanpa melebihinya. Klik pada chip untuk
+          memasang taruhan, lalu tekan "Go" untuk memulai.
+        </p>
+
+        <h3>Fitur Game</h3>
+        <ul>
+          <li>
+            <strong>Double</strong> – Gandakan taruhan Anda dan ambil satu kartu
+            tambahan.
+          </li>
+          <li>
+            <strong>Insurance</strong> – Taruhan sampingan jika kartu terbuka
+            Dealer adalah Ace.
+          </li>
+          <li>
+            <strong>Give Up</strong> – Menyerah dan dapatkan kembali separuh
+            dari taruhan Anda.
+          </li>
+        </ul>
+
+        <h3>Nilai Chip</h3>
+        <table id="chip-table">
+          <thead>
+            <tr>
+              <th>Nilai</th>
+              <th>Chip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>500</td>
+              <td>
+                <img
+                  src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipBlueWhite_side.png"
+                  alt="Chip 500"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>100</td>
+              <td>
+                <img
+                  src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipBlackWhite_side.png"
+                  alt="Chip 100"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>25</td>
+              <td>
+                <img
+                  src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipGreenWhite_side.png"
+                  alt="Chip 25"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>
+                <img
+                  src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipRedWhite_side.png"
+                  alt="Chip 5"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>
+                <img
+                  src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipWhiteBlue_side.png"
+                  alt="Chip 1"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="credits">
+          Aset grafis oleh
+          <a
+            href="http://www.kenney.nl"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Kenney Vleugels</a
+          >.
+        </p>
+      </div>
     </div>
 
     <script src="js/create.js"></script>
     <script src="js/conf.js"></script>
     <script src="js/card.js"></script>
     <script src="js/button.js"></script>
-    <script src="js/game.js"></script>
+    <script src="js/logic.js"></script>
     <script src="js/CreateJSTextInput.js"></script>
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <script>
+      const helpButton = document.getElementById('help-button');
+      const closeModalButton = document.getElementById('close-modal-button');
+      const modalOverlay = document.getElementById('help-modal-overlay');
+
+      helpButton.addEventListener('click', () => {
+        modalOverlay.style.display = 'flex';
+      });
+
+      const closeModal = () => {
+        modalOverlay.style.display = 'none';
+      };
+
+      closeModalButton.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (event) => {
+        // Hanya tutup jika yang diklik adalah area overlay, bukan konten modalnya
+        if (event.target === modalOverlay) {
+          closeModal();
+        }
+      });
+    </script>
   </body>
 </html>
