@@ -485,4 +485,8 @@ Thanks for checking it out!
 
 ---
 
+<<<<<<< HEAD
+_This documentation should be updated whenever pipeline configurations change. Last updated: [Date]_
+=======
 _This documentation should be updated whenever pipeline configurations change. Last updated: [09/06/2025]_
+>>>>>>> ba82fcb41ae98c8942bd3b2e2c6fc9f53a54ec44

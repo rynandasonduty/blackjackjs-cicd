@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
-// Assuming these are defined in other files or globally
 /* global Button, TextInput, deckNumber, suits, Card, rand, tick */
 
-// Declare global game object for testing
+// Declare global game object and module-scoped variables for testing
 let game;
+let player;
+let bank;
 
 function init() {
   const stage = new createjs.Stage('canvas');
@@ -19,14 +20,13 @@ function init() {
     },
     startContainer: false,
     buttons: [
-      new Button('Hit', '#fff', 100, 100, () => player.hit()),
-      new Button('Stand', '#fff', 200, 100, () => player.stand()),
-      new Button('Go', '#fff', 935, -430, () => game.go()),
-      new Button('Insurance', '#fff', 100, -80, () => player.insure()),
-      // new Button('Split', '#fff', 100, -40, () => l('split')),
-      new Button('Double', '#fff', 100, -40, () => player.double()),
-      new Button('Give up', '#fff', 100, 0, () => player.giveUp()),
-      new Button('New game', '#fff', 100, -490, () => game.reset()),
+      new Button('Hit', '#008080', 100, 100, () => player.hit()),
+      new Button('Stand', '#A52A2A', 300, 100, () => player.stand()),
+      new Button('Go', '#4682B4', 935, -430, () => game.go()),
+      new Button('Insurance', '#A0522D', 100, -130, () => player.insure()),
+      new Button('Double', '#483D8B', 100, -65, () => player.double()),
+      new Button('Give up', '#696969', 100, 0, () => player.giveUp()),
+      new Button('New game', '#A52A2A', 100, -490, () => game.reset()),
     ],
     buttonContainer: false,
     dealtChipContainer: false,
@@ -38,43 +38,54 @@ function init() {
       red: 0,
       white: 0,
     },
-    // --- PENAMBAHAN: Objek untuk mengontrol alur game ---
+
     gameControl: {
       gamesPlayed: 0,
-      phase: 1, // 1: 3x menang, 2: berbasis taruhan
+      phase: 1,
       consecutiveLosses: 0,
       needTwoLosses: false,
     },
+
     resetChips() {
       Object.keys(this.dealt).forEach((color) => {
         this.dealt[color] = 0;
       });
     },
+
     message: {
       text: false,
       init() {
-        this.text = new createjs.Text(messages.bet, '40px Arial', '#fff');
+        this.text = new createjs.Text(
+          messages.bet,
+          'bold 40px \'Arial\', sans-serif',
+          '#FFD700'
+        );
         this.text.x = 850;
-        this.text.y = 0;
+        this.text.y = 20;
+        this.text.shadow = new createjs.Shadow('#000000', 3, 3, 5);
         stage.addChild(this.text);
       },
     },
 
     _alert(msg) {
-      const alertText = new createjs.Text(msg.msg, '30px Arial', 'orange');
+      const alertText = new createjs.Text(
+        msg.msg,
+        'bold 30px \'Arial\', sans-serif',
+        'orange'
+      );
       alertText.x = msg.x || 745;
       alertText.y = 120;
+      alertText.shadow = new createjs.Shadow('#000000', 2, 2, 4);
       stage.addChild(alertText);
       createjs.Tween.get(alertText)
-        .wait(1000)
-        .to({ alpha: 0 }, 1000, createjs.Ease.getPowInOut(1));
+        .wait(1500)
+        .to({ alpha: 0, y: alertText.y - 20 }, 1000, createjs.Ease.quadOut);
     },
 
     reset() {
       ['userName', 'chips', 'funds'].forEach((v) =>
         localStorage.removeItem(`BlackJackJs-${v}`)
       );
-      // --- MODIFIKASI: Reset game control state ---
       this.gameControl = {
         gamesPlayed: 0,
         phase: 1,
@@ -85,35 +96,29 @@ function init() {
     },
 
     over() {
-      ['userName', 'chips', 'funds'].forEach((v) =>
-        localStorage.removeItem(`BlackJackJs-${v}`)
-      );
       stage.removeAllChildren();
-      const gameOverText = new createjs.Text('Game Over', '50px Arial', '#fff');
-      gameOverText.center(1, 1);
-      const replayText = new createjs.Text('Replay', '30px Arial', '#fff');
-      replayText.center(1);
-      replayText.y = 400;
-      const hit = new createjs.Shape();
-      hit.graphics
-        .beginFill('#000')
-        .drawRect(
-          0,
-          0,
-          replayText.getMeasuredWidth(),
-          replayText.getMeasuredHeight()
-        );
-      replayText.hitArea = hit;
-      replayText.alpha = 0.7;
-      replayText.cursor = 'Pointer';
-      replayText.on('mouseover', () => {
-        replayText.alpha = 1;
-      });
-      replayText.on('mouseout', () => {
-        replayText.alpha = 0.7;
-      });
-      replayText.addEventListener('click', () => location.reload());
-      stage.addChild(gameOverText, replayText);
+      const gameOverText = new createjs.Text(
+        'GAME OVER, STOP ONLINE GAMBLING',
+        'bold 40px \'Arial\'',
+        '#FF0000'
+      );
+      gameOverText.textAlign = 'center';
+      gameOverText.lineWidth = stage.canvas.width - 50;
+      gameOverText.x = stage.canvas.width / 2;
+      gameOverText.y = stage.canvas.height / 2 - 30;
+      gameOverText.shadow = new createjs.Shadow('#000000', 5, 5, 10);
+
+      const buttonWidth = 150;
+      const centeredButtonX = (stage.canvas.width - buttonWidth) / 2;
+      const replayButton = new Button(
+        'Replay',
+        '#008080',
+        centeredButtonX,
+        gameOverText.y + 80,
+        () => game.reset()
+      ).createVisual();
+
+      stage.addChild(gameOverText, replayButton);
     },
 
     balanceChips(value) {
@@ -124,29 +129,121 @@ function init() {
         red: 0,
         white: 0,
       };
+      const sortedChipColors = ['blue', 'black', 'green', 'red', 'white'];
 
-      while (value !== 0) {
-        Object.keys(chips)
-          .reverse()
-          .forEach((chip) => {
-            if (value >= game.chipsValue[chip]) {
-              value -= game.chipsValue[chip];
-              chips[chip]++;
-            }
-          });
+      for (const color of sortedChipColors) {
+        const chipValue = this.chipsValue[color];
+        while (value >= chipValue) {
+          value -= chipValue;
+          chips[color]++;
+        }
       }
 
       return chips;
+    },
+
+    getBalancedChips(value) {
+      const chips = this.balanceChips(value);
+
+      if (chips.blue > 0) {
+        chips.blue--;
+        chips.black += 5;
+      }
+      if (chips.black > 0) {
+        chips.black--;
+        chips.green += 4;
+      }
+      if (chips.green > 0) {
+        chips.green--;
+        chips.red += 5;
+      }
+      if (chips.red > 0) {
+        chips.red--;
+        chips.white += 5;
+      }
+
+      return chips;
+    },
+
+    showResultPopup(message, outcome, onContinue) {
+      const popupContainer = new createjs.Container();
+
+      const overlay = new createjs.Shape();
+      overlay.graphics
+        .beginFill('rgba(0,0,0,0.7)')
+        .drawRect(0, 0, stage.canvas.width, stage.canvas.height);
+      popupContainer.addChild(overlay);
+
+      const panelWidth = 500;
+      const panelHeight = 250;
+      const panel = new createjs.Shape();
+      const panelColor = outcome === 'win' ? '#008080' : '#A52A2A';
+      panel.graphics
+        .beginFill('#1C1C1C')
+        .beginStroke(panelColor)
+        .setStrokeStyle(4)
+        .drawRoundRect(0, 0, panelWidth, panelHeight, 20);
+      panel.x = (stage.canvas.width - panelWidth) / 2;
+      panel.y = (stage.canvas.height - panelHeight) / 2;
+      panel.shadow = new createjs.Shadow('#000000', 5, 5, 15);
+      popupContainer.addChild(panel);
+
+      const resultText = new createjs.Text(
+        message,
+        'bold 32px \'Arial\', sans-serif',
+        '#FFFFFF'
+      );
+      resultText.textAlign = 'center';
+      resultText.lineWidth = panelWidth - 40;
+      resultText.x = stage.canvas.width / 2;
+      resultText.y = panel.y + 60;
+      resultText.shadow = new createjs.Shadow(panelColor, 0, 0, 15);
+      popupContainer.addChild(resultText);
+
+      const continueButton = new Button(
+        'Continue',
+        '#4682B4',
+        (stage.canvas.width - 150) / 2,
+        panel.y + 150,
+        () => {
+          stage.removeChild(popupContainer);
+          onContinue();
+        }
+      ).createVisual();
+      popupContainer.addChild(continueButton);
+
+      popupContainer.alpha = 0;
+      stage.addChild(popupContainer);
+      createjs.Tween.get(popupContainer).to(
+        { alpha: 1 },
+        500,
+        createjs.Ease.quadOut
+      );
     },
 
     startScreen() {
       stage.enableMouseOver(10);
       createjs.Ticker.addEventListener('tick', tick);
       createjs.Ticker.setFPS(60);
-      createjs.Sound.registerSound('assets/sounds/sfx_lose.ogg', 'lose');
-      createjs.Sound.registerSound('assets/sounds/sfx_shieldUp.ogg', 'win');
-      createjs.Sound.registerSound('assets/Bonus/cardPlace1.ogg', 'card');
-      createjs.Sound.registerSound('assets/Bonus/chipsCollide1.ogg', 'chip');
+
+      const sounds = [
+        { src: 'assets/sounds/sfx_lose.ogg', id: 'lose' },
+        { src: 'assets/sounds/sfx_shieldUp.ogg', id: 'win' },
+        { src: 'assets/Bonus/cardPlace1.ogg', id: 'card' },
+        { src: 'assets/Bonus/chipsCollide1.ogg', id: 'chip' },
+        { src: 'assets/music/nama_lagu_anda.mp3', id: 'background-music' },
+      ];
+
+      createjs.Sound.registerSounds(sounds);
+
+      createjs.Sound.on('fileload', (event) => {
+        if (event.id === 'background-music') {
+          createjs.Sound.play('background-music', { loop: -1, volume: 0.3 });
+        }
+      });
+      createjs.Sound.on('fileerror', (event) => {
+        console.error('Error memuat suara:', event.src);
+      });
 
       if (localStorage.getItem('BlackJackJs-userName')) {
         player.name.value = localStorage.getItem('BlackJackJs-userName');
@@ -157,47 +254,37 @@ function init() {
         this.startContainer = new createjs.Container();
         const titleText = new createjs.Text(
           'BlackJackJs',
-          '60px Arial',
-          '#fff'
+          'bold 70px \'Arial\', sans-serif',
+          '#FFD700'
         );
         titleText.center(1, 1);
-        const nameInput = new TextInput();
-        // autofocus
-        nameInput._focused = true;
-        nameInput._hiddenInput.style.display = 'block';
-        nameInput._hiddenInput.style.left = `${nameInput.x + stage.canvas.offsetLeft + nameInput._padding}px`;
-        nameInput._hiddenInput.style.top = `${nameInput.y + stage.canvas.offsetTop + nameInput._padding}px`;
-        nameInput._hiddenInput.focus();
-        nameInput.x = 430;
-        nameInput.y = 400;
-        nameInput._visiblePostCursorText.text = 'Your name';
+        titleText.shadow = new createjs.Shadow('#000000', 5, 5, 10);
 
-        const submitText = new createjs.Text('OK', '30px Arial', '#fff');
-        submitText.x = 640;
-        submitText.y = 403;
-        submitText.cursor = 'Pointer';
-        const hit = new createjs.Shape();
-        hit.graphics
-          .beginFill('#000')
-          .drawRect(
-            0,
-            0,
-            submitText.getMeasuredWidth(),
-            submitText.getMeasuredHeight()
-          );
-        submitText.hitArea = hit;
-        submitText.addEventListener('click', () => {
-          player.name.value =
-            nameInput._visiblePreCursorText.text || 'Player 1';
-          localStorage.setItem('BlackJackJs-userName', player.name.value);
-          localStorage.setItem('BlackJackJs-funds', '1000');
-          localStorage.setItem(
-            'BlackJackJs-chips',
-            JSON.stringify(player.chips)
-          );
-          game.start();
-        });
-        this.startContainer.addChild(titleText, nameInput, submitText);
+        const nameInput = new TextInput();
+        nameInput.x = (stage.canvas.width - nameInput.width) / 2;
+        nameInput.y = 400;
+
+        const buttonWidth = 150;
+        const centeredButtonX = (stage.canvas.width - buttonWidth) / 2;
+
+        const submitButton = new Button(
+          'Play',
+          '#008080',
+          centeredButtonX,
+          470,
+          () => {
+            player.name.value = nameInput._preCursorText || 'Player 1';
+            localStorage.setItem('BlackJackJs-userName', player.name.value);
+            localStorage.setItem('BlackJackJs-funds', '1000');
+            localStorage.setItem(
+              'BlackJackJs-chips',
+              JSON.stringify(player.chips)
+            );
+            game.start();
+          }
+        ).createVisual();
+
+        this.startContainer.addChild(titleText, nameInput, submitButton);
         stage.addChild(this.startContainer);
       }
     },
@@ -205,11 +292,12 @@ function init() {
     start() {
       player.name.text = new createjs.Text(
         player.name.value,
-        '30px Arial',
-        '#fff'
+        'bold 30px \'Arial\', sans-serif',
+        '#FFFFFF'
       );
       player.name.text.center();
       player.name.text.y = 600;
+      player.name.text.shadow = new createjs.Shadow('#000000', 2, 2, 4);
       stage.addChild(player.name.text);
       if (this.startContainer) {
         this.startContainer.removeAllChildren();
@@ -232,7 +320,6 @@ function init() {
       }
     },
 
-    // --- MODIFIKASI: Menambahkan logika transisi fase ---
     end() {
       game.dealtChipContainer.removeAllChildren();
       game.inProgress = false;
@@ -244,7 +331,7 @@ function init() {
       bank.blackjack = false;
       bank.deck = [];
       player.dealt = 0;
-      player.chips = game.balanceChips(player.funds);
+      player.chips = game.getBalancedChips(player.funds);
       game.resetChips();
       game.addChips();
       player.store();
@@ -253,6 +340,7 @@ function init() {
       this.message.text.text = messages.bet;
 
       this.gameControl.gamesPlayed++;
+
       if (
         this.gameControl.phase === 1 &&
         this.gameControl.gamesPlayed >= 3 &&
@@ -315,7 +403,6 @@ function init() {
       return total;
     },
 
-    // --- PENAMBAHAN: Fungsi untuk menentukan hasil ronde ---
     shouldPlayerWin() {
       const currentBet = player.dealt;
       const playerFunds = player.funds;
@@ -326,32 +413,118 @@ function init() {
           this.gameControl.needTwoLosses = true;
           this.gameControl.consecutiveLosses = 0;
         }
+
         if (this.gameControl.needTwoLosses) {
           if (this.gameControl.consecutiveLosses < 2) {
-            return false; // Kalah
+            return false;
           } else {
             this.gameControl.needTwoLosses = false;
             this.gameControl.consecutiveLosses = 0;
-            return true; // Kembali menang
+            return true;
           }
         }
-        return true; // Selalu menang di fase 1
+
+        return true;
       }
 
       if (this.gameControl.phase === 2) {
         if (playerFunds >= CHIP_TRIGGER) {
-          return false; // Selalu kalah jika chip >= 2000
+          return false;
         }
+
         if (currentBet < 100) {
-          return true; // Menang jika bet < 100
+          return true;
         } else {
-          return false; // Kalah jika bet >= 100
+          return false;
         }
       }
-      return true; // Fallback
+
+      return true;
     },
 
-    // --- PENAMBAHAN: Fungsi-fungsi helper untuk mengendalikan kartu ---
+    getControlledCard(targetDeck, desiredOutcome) {
+      const availableCards = [...this.deck];
+
+      if (targetDeck === 'player') {
+        return this.getPlayerCard(availableCards, desiredOutcome);
+      } else {
+        return this.getBankCard(availableCards, desiredOutcome);
+      }
+    },
+
+    getPlayerCard(availableCards, shouldWin) {
+      const currentTotal = this.deckValue(player.deck);
+
+      if (shouldWin) {
+        if (currentTotal <= 11) {
+          const goodCards = availableCards.filter((card) => {
+            const value = this.getCardNumericValue(card);
+            return value >= 8;
+          });
+          if (goodCards.length > 0) {
+            return goodCards[rand(0, goodCards.length - 1)];
+          }
+        } else if (currentTotal <= 16) {
+          const safeCards = availableCards.filter((card) => {
+            const value = this.getCardNumericValue(card);
+            return currentTotal + value <= 21;
+          });
+          if (safeCards.length > 0) {
+            return safeCards[rand(0, safeCards.length - 1)];
+          }
+        }
+      } else {
+        if (currentTotal >= 12) {
+          const bustCards = availableCards.filter((card) => {
+            const value = this.getCardNumericValue(card);
+            return currentTotal + value > 21;
+          });
+          if (bustCards.length > 0) {
+            return bustCards[rand(0, bustCards.length - 1)];
+          }
+        }
+      }
+
+      return availableCards[rand(0, availableCards.length - 1)];
+    },
+
+    getBankCard(availableCards, shouldWin) {
+      const bankTotal = this.deckValue(bank.deck);
+      const playerTotal = this.deckValue(player.deck);
+
+      if (shouldWin) {
+        if (bankTotal >= 12 && bankTotal <= 16) {
+          const bustCards = availableCards.filter((card) => {
+            const value = this.getCardNumericValue(card);
+            return bankTotal + value > 21;
+          });
+          if (bustCards.length > 0) {
+            return bustCards[rand(0, bustCards.length - 1)];
+          }
+        }
+
+        const lowerCards = availableCards.filter((card) => {
+          const value = this.getCardNumericValue(card);
+          const newTotal = bankTotal + value;
+          return newTotal < playerTotal && newTotal <= 21 && newTotal >= 17;
+        });
+        if (lowerCards.length > 0) {
+          return lowerCards[rand(0, lowerCards.length - 1)];
+        }
+      } else {
+        const goodCards = availableCards.filter((card) => {
+          const value = this.getCardNumericValue(card);
+          const newTotal = bankTotal + value;
+          return newTotal >= playerTotal && newTotal <= 21 && newTotal >= 17;
+        });
+        if (goodCards.length > 0) {
+          return goodCards[rand(0, goodCards.length - 1)];
+        }
+      }
+
+      return availableCards[rand(0, availableCards.length - 1)];
+    },
+
     getCardNumericValue(card) {
       if (card.value >= 2 && card.value <= 10) {
         return card.value;
@@ -365,70 +538,16 @@ function init() {
       return 0;
     },
 
-    getPlayerCard(availableCards, shouldWin) {
-      const currentTotal = this.deckValue(player.deck);
-      if (shouldWin) {
-        if (currentTotal <= 16) {
-          const safeCards = availableCards.filter(
-            (card) => currentTotal + this.getCardNumericValue(card) <= 21
-          );
-          if (safeCards.length > 0) {
-            return safeCards[rand(0, safeCards.length - 1)];
-          }
-        }
-      } else {
-        if (currentTotal >= 12) {
-          const bustCards = availableCards.filter(
-            (card) => currentTotal + this.getCardNumericValue(card) > 21
-          );
-          if (bustCards.length > 0) {
-            return bustCards[rand(0, bustCards.length - 1)];
-          }
-        }
-      }
-      return availableCards[rand(0, availableCards.length - 1)];
-    },
-
-    getBankCard(availableCards, shouldWin) {
-      const bankTotal = this.deckValue(bank.deck);
-      const playerTotal = this.deckValue(player.deck);
-
-      if (shouldWin) {
-        // Bank harus kalah atau bust
-        if (bankTotal >= 12 && bankTotal <= 16) {
-          const bustCards = availableCards.filter(
-            (card) => bankTotal + this.getCardNumericValue(card) > 21
-          );
-          if (bustCards.length > 0) {
-            return bustCards[rand(0, bustCards.length - 1)];
-          }
-        }
-      } else {
-        // Bank harus menang
-        const goodCards = availableCards.filter((card) => {
-          const newTotal = bankTotal + this.getCardNumericValue(card);
-          return newTotal >= playerTotal && newTotal <= 21;
-        });
-        if (goodCards.length > 0) {
-          return goodCards[rand(0, goodCards.length - 1)];
-        }
-      }
-      return availableCards[rand(0, availableCards.length - 1)];
-    },
-
-    getControlledCard(targetDeck, desiredOutcome) {
-      const availableCards = [...this.deck];
-      if (targetDeck === 'player') {
-        return this.getPlayerCard(availableCards, desiredOutcome);
-      } else {
-        return this.getBankCard(availableCards, desiredOutcome);
-      }
-    },
-
-    // --- MODIFIKASI: `distributeCard` sekarang menggunakan logika kontrol ---
     distributeCard(to, hidden = false) {
       const shouldWin = this.shouldPlayerWin();
-      const card = this.getControlledCard(to, shouldWin);
+      let card;
+
+      if (this.gameControl.phase === 1 || this.gameControl.phase === 2) {
+        card = this.getControlledCard(to, shouldWin);
+      } else {
+        const index = rand(0, this.deck.length - 1);
+        card = this.deck[index];
+      }
 
       if (hidden) {
         card.hidden = true;
@@ -440,14 +559,19 @@ function init() {
         player.deck.push(card);
       }
 
-      const cardIndex = this.deck.findIndex(
-        (c) => c.suit === card.suit && c.value === card.value
-      );
-      if (cardIndex > -1) {
-        this.deck.splice(cardIndex, 1);
-      }
+      const cardIndex = this.deck.indexOf(card);
+      this.deck.splice(cardIndex, 1);
 
       this.displayCard(card, to);
+    },
+
+    flipCard(cardBitmap, cardData) {
+      createjs.Tween.get(cardBitmap)
+        .to({ scaleX: 0 }, 200, createjs.Ease.quadIn)
+        .call(() => {
+          cardBitmap.image.src = imgs.cards.get(cardData.suit, cardData.value);
+        })
+        .to({ scaleX: 1 }, 200, createjs.Ease.quadOut);
     },
 
     displayCard(card, owner) {
@@ -470,6 +594,8 @@ function init() {
           ? `${imgs.cards.path}${imgs.cards.back.red}.${imgs.cards.ext}`
           : imgs.cards.get(card.suit, card.value)
       );
+
+      cardBitmap.shadow = new createjs.Shadow('rgba(0,0,0,0.4)', 4, 4, 8);
 
       if (owner === 'bank') {
         cardBitmap.x = 0;
@@ -504,28 +630,7 @@ function init() {
       stage.addChild(this.buttonContainer);
 
       this.buttons.forEach((b) => {
-        const button = new createjs.Text(b.text, '30px Arial', b.color);
-        button.x = b.x;
-        button.y = b.y;
-        const hit = new createjs.Shape();
-        hit.graphics
-          .beginFill('#000')
-          .drawRect(
-            0,
-            0,
-            button.getMeasuredWidth(),
-            button.getMeasuredHeight()
-          );
-        button.hitArea = hit;
-        button.alpha = 0.7;
-        button.on('mouseover', () => {
-          button.alpha = 1;
-          button.cursor = 'Pointer';
-        });
-        button.on('mouseout', () => {
-          button.alpha = 0.7;
-        });
-        button.addEventListener('click', b.onclick);
+        const button = b.createVisual();
         game.buttonContainer.addChild(button);
       });
     },
@@ -551,6 +656,7 @@ function init() {
             chipImg.y = base.y;
             chipImg.color = chip;
             chipImg.dealt = false;
+            chipImg.shadow = new createjs.Shadow('#000000', 3, 3, 5);
             player.chipsContainer.addChild(chipImg);
             base.y -= 10;
             if (i === player.chips[chip] - 1) {
@@ -591,7 +697,7 @@ function init() {
       createjs.Tween.get(chip).to(
         { x: rand(350, 675), y: rand(190, 350) },
         750,
-        createjs.Ease.getPowInOut(1)
+        createjs.Ease.quadOut
       );
       const color = chip.color;
       player.dealt += this.chipsValue[color];
@@ -635,41 +741,37 @@ function init() {
     },
   };
 
-  const bank = {
+  bank = {
     deck: [],
     cardsContainer: false,
     blackjack: false,
 
     play() {
       if (player.doubled && player.deck.length > 2) {
-        player.cardsContainer.children[2].image.src = imgs.cards.get(
-          player.deck[2].suit,
-          player.deck[2].value
-        );
+        game.flipCard(player.cardsContainer.children[2], player.deck[2]);
       }
 
       if (this.deck.length === 2) {
-        this.cardsContainer.children[1].image.src = imgs.cards.get(
-          this.deck[1].suit,
-          this.deck[1].value
-        );
+        game.flipCard(this.cardsContainer.children[1], this.deck[1]);
       }
 
       const total = game.deckValue(this.deck);
       if (total < 17) {
-        game.distributeCard('bank');
-        if (game.deckValue(this.deck) < 17) {
-          setTimeout(() => bank.play(), 1000);
-        } else {
-          game.check();
-        }
+        setTimeout(() => {
+          game.distributeCard('bank');
+          if (game.deckValue(this.deck) < 17) {
+            setTimeout(() => bank.play(), 1000);
+          } else {
+            setTimeout(() => game.check(), 500);
+          }
+        }, 1000);
       } else {
-        game.check();
+        setTimeout(() => game.check(), 500);
       }
     },
   };
 
-  const player = {
+  player = {
     deck: [],
     name: {
       value: 'Player 1',
@@ -684,9 +786,14 @@ function init() {
     fundsText: {
       text: false,
       init() {
-        this.text = new createjs.Text(player.funds, '30px Arial', '#fff');
+        this.text = new createjs.Text(
+          player.funds,
+          'bold 30px \'Arial\', sans-serif',
+          '#FFFFFF'
+        );
         this.text.x = 880;
         this.text.y = 590;
+        this.text.shadow = new createjs.Shadow('#000000', 2, 2, 4);
         stage.addChild(this.text);
       },
       update() {
@@ -695,7 +802,13 @@ function init() {
     },
     betted: false,
     dealt: 0,
-    chips: game.balanceChips(1000),
+    chips: {
+      blue: 1,
+      black: 3,
+      green: 5,
+      red: 11,
+      white: 20,
+    },
 
     hit() {
       if (this.betted) {
@@ -726,7 +839,7 @@ function init() {
       ) {
         this.insurance = Math.round(this.dealt / 2);
         this.funds -= this.insurance;
-        this.chips = game.balanceChips(this.funds);
+        this.chips = game.getBalancedChips(this.funds);
         this.fundsText.update();
         game._alert(messages.warning.insured);
       } else {
@@ -741,7 +854,7 @@ function init() {
           this.doubled = true;
           this.funds -= this.dealt;
           this.dealt *= 2;
-          this.chips = game.balanceChips(this.funds);
+          this.chips = game.getBalancedChips(this.funds);
           this.store();
           game.addChips();
           for (const chip in game.dealt) {
@@ -778,7 +891,7 @@ function init() {
       if (game.inProgress && this.deck.length === 2 && bank.deck.length === 2) {
         game._alert(messages.warning.gaveUp);
         this.funds += Math.round(this.dealt / 2);
-        this.chips = game.balanceChips(this.funds);
+        this.chips = game.getBalancedChips(this.funds);
         this.fundsText.update();
         player.store();
         game.addChips();
@@ -789,58 +902,58 @@ function init() {
     },
 
     win() {
-      // --- MODIFIKASI: Reset status hukuman saat menang ---
       if (game.gameControl.needTwoLosses) {
         game.gameControl.needTwoLosses = false;
         game.gameControl.consecutiveLosses = 0;
       }
-      game.message.text.text = messages.win;
-      setTimeout(() => {
+      game.showResultPopup(messages.win, 'win', () => {
         createjs.Sound.play('win');
         player.funds += player.blackjack ? player.dealt * 3 : player.dealt * 2;
         game.end();
         player.fundsText.update();
-      }, 2000);
+      });
     },
 
     lose() {
-      // --- MODIFIKASI: Tambah penghitung kekalahan jika dalam mode hukuman ---
       if (game.gameControl.needTwoLosses) {
         game.gameControl.consecutiveLosses++;
       }
-      game.message.text.text = messages.lose;
       if (this.doubled && this.deck.length === 3) {
-        this.cardsContainer.children[2].image.src = imgs.cards.get(
-          this.deck[2].suit,
-          this.deck[2].value
-        );
+        game.flipCard(this.cardsContainer.children[2], this.deck[2]);
       }
-      setTimeout(() => {
+
+      let messageToShow;
+      if (player.funds <= 0) {
+        messageToShow = 'Anda kalah, stop judi online.';
+      } else {
+        messageToShow = messages.lose;
+      }
+
+      game.showResultPopup(messageToShow, 'lose', () => {
         createjs.Sound.play('lose');
         if (bank.blackjack && player.insurance) {
           player.funds += player.insurance * 2;
-          player.chips = game.balanceChips(player.funds);
+          this.chips = game.getBalancedChips(player.funds);
           player.fundsText.update();
         }
         if (player.funds <= 0) {
           return game.over();
         }
         game.end();
-      }, 2000);
+      });
     },
 
     draw() {
-      game.message.text.text = messages.draw;
-      setTimeout(() => {
+      game.showResultPopup(messages.draw, 'draw', () => {
         if (bank.blackjack && player.insurance) {
           player.funds += player.insurance * 2;
-          player.chips = game.balanceChips(player.funds);
+          this.chips = game.getBalancedChips(player.funds);
           player.fundsText.update();
         }
         player.funds += player.dealt;
         player.fundsText.update();
         game.end();
-      }, 2000);
+      });
     },
 
     store() {
@@ -856,9 +969,14 @@ function init() {
   game.startScreen();
 }
 
+// Function for Jest tests to access internal instances
+function getGameInstances() {
+  return { game, player, bank };
+}
+
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { init, game };
+  module.exports = { init, getGameInstances };
 } else if (typeof global !== 'undefined') {
   global.game = game;
 }
