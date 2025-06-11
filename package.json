@@ -9,16 +9,11 @@
     "lint:report": "eslint . --format=json --output-file=eslint-report.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "audit": "npm audit --audit-level=high",
+    "audit": "npm audit --audit-level=moderate",
     "test": "jest --coverage",
     "fix-all": "npm run lint:fix && npm run format"
   },
-  "keywords": [
-    "blackjack",
-    "game",
-    "javascript",
-    "createjs"
-  ],
+  "keywords": ["blackjack", "game", "javascript", "createjs"],
   "author": "",
   "license": "ISC",
   "devDependencies": {
