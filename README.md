@@ -8,7 +8,35 @@ BlackJackJS is a simple Blackjack game built using HTML, JavaScript, and [Create
 
 ## 🎲 How to Play
 
-Click on a chip to place your bet and start the game!
+### Objective of the Game
+
+The main goal in Blackjack is to beat the Dealer in one of the following ways:
+
+- Get a total card value of 21 on your first two cards (a "Blackjack").
+- Reach a final score higher than the Dealer without exceeding 21.
+- Let the Dealer draw additional cards until their hand exceeds 21 ("Bust").
+
+### Gameplay Flow
+
+1.  **Place Your Bet**: Click on one of the chips at the bottom to set your bet amount.
+2.  **Start the Round**: Press the **"Go"** button to begin. You and the Dealer will each receive two cards.
+3.  **Your Turn**: Based on your cards, choose an action:
+    - **Hit**: Take one additional card.
+    - **Stand**: Take no more cards and end your turn.
+4.  **Dealer's Turn**: After you stand, the Dealer will reveal their face-down card and must draw cards until their total is 17 or higher.
+5.  **Outcome**: The winner is determined by comparing your final card total against the Dealer's.
+
+### Rules & Card Values
+
+- **Number Cards (2-10)**: Their value is the number on the card.
+- **Face Cards (J, Q, K)**: Each is worth 10.
+- **Ace**: Can be worth either 1 or 11, whichever is more advantageous for your hand.
+
+### Game Features
+
+- **Double Down**: Double your initial bet, but you may only draw one more card.
+- **Insurance**: If the Dealer's face-up card is an Ace, you can place a side bet. You win this bet if the Dealer has a Blackjack.
+- **Give Up**: Forfeit the round after the initial deal and get half of your bet back.
 
 ### 💰 Chip Values:
 
@@ -19,12 +47,6 @@ Click on a chip to place your bet and start the game!
 | 25    | ![25](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipGreenWhite_side.png)  |
 | 5     | ![5](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipRedWhite_side.png)     |
 | 1     | ![1](https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipWhiteBlue_side.png)    |
-
-### 🔧 Game Features
-
-- **Double** – Double your bet and draw one more card.
-- **Insurance** – A side bet when the dealer shows an Ace.
-- **Give Up** – Forfeit half of your bet and end the round early.
 
 🎨 Thanks to [Kenney Vleugels](http://www.kenney.nl) for the amazing graphic assets!
 
@@ -463,4 +485,8 @@ Thanks for checking it out!
 
 ---
 
+<<<<<<< HEAD
 _This documentation should be updated whenever pipeline configurations change. Last updated: [Date]_
+=======
+_This documentation should be updated whenever pipeline configurations change. Last updated: [09/06/2025]_
+>>>>>>> ba82fcb41ae98c8942bd3b2e2c6fc9f53a54ec44
