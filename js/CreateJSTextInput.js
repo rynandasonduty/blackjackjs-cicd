@@ -61,6 +61,18 @@ class TextInput extends createjs.Container {
     this._hiddenInput.style.display = 'none';
     this._hiddenInput.style.position = 'absolute';
     this._hiddenInput.style.zIndex = -100;
+
+    // --- PERBAIKAN: Menambahkan style agar input benar-benar tidak terlihat ---
+    // Membuat input transparan total dan berukuran sangat kecil.
+    this._hiddenInput.style.opacity = 0;
+    this._hiddenInput.style.width = '1px';
+    this._hiddenInput.style.height = '1px';
+    this._hiddenInput.style.border = 'none';
+    this._hiddenInput.style.padding = '0';
+    this._hiddenInput.style.margin = '0';
+    this._hiddenInput.style.background = 'transparent';
+    // ----------------------------------------------------------------------
+
     document.body.appendChild(this._hiddenInput);
   }
 
