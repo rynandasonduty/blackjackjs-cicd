@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1749684207153" clover="3.2.0">
-  <project timestamp="1749684207153" name="All files">
+<coverage generated="1749684491647" clover="3.2.0">
+  <project timestamp="1749684491647" name="All files">
     <metrics statements="493" coveredstatements="178" conditionals="229" coveredconditionals="50" methods="78" coveredmethods="21" elements="800" coveredelements="249" complexity="0" loc="493" ncloc="493" packages="1" files="1" classes="1"/>
     <file name="game.js" path="E:\ANDIARS-ARCHIVE\ANDIAR KULIAH\PSO\Project Final KELASS\BlackJackJs-master\BlackJackJs-master\js\game.js">
       <metrics statements="493" coveredstatements="178" conditionals="229" coveredconditionals="50" methods="78" coveredmethods="21"/>
