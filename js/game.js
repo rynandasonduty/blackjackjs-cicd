@@ -291,7 +291,7 @@ function init(userData) {
       const alertContainer = new createjs.Container();
       const alertText = new createjs.Text(
         msg.msg,
-        'bold 22px \'Roboto\', sans-serif',
+        "bold 22px 'Roboto', sans-serif",
         '#f5f5f5'
       );
       alertText.textAlign = 'center';
@@ -553,7 +553,7 @@ function init(userData) {
 
       const resultText = new createjs.Text(
         message,
-        'bold 42px \'Playfair Display\', serif',
+        "bold 42px 'Playfair Display', serif",
         '#f5f5f5'
       );
       resultText.textAlign = 'center';
@@ -992,7 +992,7 @@ function init(userData) {
     init(stageRef) {
       this.text = new createjs.Text(
         messages.bet,
-        'bold 40px \'Playfair Display\', serif',
+        "bold 40px 'Playfair Display', serif",
         '#e2b344'
       );
       this.text.x = layout.mainMessage.x;
@@ -1008,7 +1008,7 @@ function init(userData) {
   player.fundsText.init = function (stageRef) {
     this.text = new createjs.Text(
       `Chips: ${player.funds}`,
-      '22px \'Roboto\', sans-serif',
+      "22px 'Roboto', sans-serif",
       '#e2b344'
     );
     this.text.x = layout.chipInfo.x;
@@ -1022,7 +1022,7 @@ function init(userData) {
 
   player.name.text = new createjs.Text(
     player.name.value,
-    'bold 24px \'Roboto\', sans-serif',
+    "bold 24px 'Roboto', sans-serif",
     '#f5f5f5'
   );
   player.name.text.x = layout.playerInfo.x;
@@ -1032,7 +1032,7 @@ function init(userData) {
 
   player.scoreText = new createjs.Text(
     '',
-    'bold 24px \'Roboto\', sans-serif',
+    "bold 24px 'Roboto', sans-serif",
     '#e2b344'
   );
   player.scoreText.x = layout.scoreBox.playerX;
@@ -1042,7 +1042,7 @@ function init(userData) {
 
   bank.scoreText = new createjs.Text(
     '',
-    'bold 24px \'Roboto\', sans-serif',
+    "bold 24px 'Roboto', sans-serif",
     '#e2b344'
   );
   bank.scoreText.x = layout.scoreBox.bankX;
