@@ -1,3 +1,10 @@
+// =================================================================
+//           FILE: js/conf.js (Peningkatan Visual)
+// =================================================================
+// Deskripsi: Memperbarui konfigurasi dasar permainan, terutama
+//            ukuran kanvas untuk memberikan ruang yang lebih luas.
+// =================================================================
+
 const imgs = {
   cards: {
     path: 'assets/PNG/Cards/',
@@ -6,13 +13,13 @@ const imgs = {
       blue: 'cardBack_blue5',
       red: 'cardBack_red5',
     },
-    /**
-     * Get card image path
-     * @param {string} suit - Card suit
-     * @param {string|number} value - Card value
-     * @returns {string} Image path
-     */
-    get(suit, value) {
+    // [[PERBAIKAN FINAL]] Fungsi get sekarang bisa menangani kartu tertutup
+    get(suit, value = 'red') {
+      // Jika suit adalah 'back', kembalikan gambar belakang kartu
+      if (suit === 'back') {
+        return `${this.path}${this.back[value]}.${this.ext}`;
+      }
+      // Jika tidak, kembalikan gambar kartu seperti biasa
       return `${this.path}card${suit}${value}.${this.ext}`;
     },
   },
@@ -39,66 +46,42 @@ const imgs = {
       main: 'chipWhiteBlue',
       side: 'chipWhiteBlue_side',
     },
-    /**
-     * Get chip image path
-     * @param {string} color - Chip color
-     * @param {string} type - Chip type (main or side)
-     * @returns {string} Image path
-     */
     get(color, type = 'main') {
       return `${this.path}${this[color][type]}.${this.ext}`;
     },
   },
 };
 
-/**
- * Number of decks used in the game
- * @type {number}
- */
 const deckNumber = 6;
-
-/**
- * Available card suits
- * @type {string[]}
- */
 const suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
 
-/**
- * Game messages configuration
- */
+// Pesan-pesan ini akan diposisikan secara dinamis di game.js
 const messages = {
-  bet: 'Bet !',
-  win: 'You win !',
-  draw: 'Draw !',
-  lose: 'Dealer wins',
+  bet: 'Bet!',
+  win: 'You Win!',
+  draw: 'Push!', // Istilah standar untuk seri di Blackjack
+  lose: 'Dealer Wins',
+  busted: 'Busted!',
+  blackjack: 'Blackjack!',
   warning: {
-    bet: { msg: 'You need to bet first', x: 750 },
-    insurance: { msg: 'You can not use insurance', x: 725 },
-    insured: { msg: 'insurance used !', x: 800 },
-    double: { msg: 'You can not double now', x: 725 },
-    funds: { msg: 'You haven\'t got enough funds', x: 680 },
-    hit: { msg: 'You can not hit anymore', x: 720 },
-    doubled: { msg: 'Bet doubled !', x: 800 },
-    giveUp: { msg: 'You can not give up now !', x: 720 },
-    gaveUp: { msg: 'You gave up', x: 800 },
+    bet: { msg: 'You need to bet first' },
+    insurance: { msg: 'Insurance is not available' },
+    insured: { msg: 'Insurance placed!' },
+    double: { msg: 'You cannot double now' },
+    funds: { msg: 'You don\'t have enough chips' },
+    hit: { msg: 'You cannot hit anymore' },
+    doubled: { msg: 'Bet Doubled!' },
+    giveUp: { msg: 'You cannot surrender now' },
+    gaveUp: { msg: 'You Surrendered' },
   },
 };
 
-/**
- * Canvas dimensions
- */
-const width = 1100;
-const height = 650;
+// [[PERBAIKAN]] Dimensi canvas diperbesar untuk tampilan yang lebih luas
+const width = 1200;
+const height = 680;
 
-/**
- * Extend CreateJS Text with center method
- */
+// [[PERBAIKAN]] Fungsi center sekarang akan menggunakan variabel width/height yang baru secara otomatis
 if (typeof createjs !== 'undefined' && createjs.Text) {
-  /**
-   * Center text horizontally and/or vertically
-   * @param {boolean} x - Center horizontally
-   * @param {boolean} y - Center vertically
-   */
   createjs.Text.prototype.center = function center(x = true, y = false) {
     const bounds = this.getBounds();
     if (x) {
@@ -110,33 +93,18 @@ if (typeof createjs !== 'undefined' && createjs.Text) {
   };
 }
 
-/**
- * Generate random number between min and max (inclusive)
- * @param {number} min - Minimum value
- * @param {number} max - Maximum value
- * @returns {number} Random number
- */
+// Fungsi helper tidak berubah
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-/**
- * Console log helper
- * @param {*} v - Value to log
- */
 function l(v) {
   console.log(v);
 }
-
-/**
- * Console table helper
- * @param {*} v - Value to display as table
- */
 function t(v) {
   console.table(v);
 }
 
-// Export for use in other modules
+// Export untuk modul
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     imgs,

@@ -49,7 +49,7 @@ export default [
       ...eslintConfigPrettier.rules,
 
       // Relaxed rules untuk development
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
       'no-undef': 'error',
       eqeqeq: 'warn',
       'no-console': 'off',

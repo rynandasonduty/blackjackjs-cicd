@@ -1,199 +1,794 @@
-/* ===== PENGATURAN DASAR & FONT ===== */
-body,
-html {
+/* =================================================================
+//                 FILE: style.css (Desain Ulang Visual)
+// =================================================================
+// Deskripsi: Stylesheet yang telah didesain ulang sepenuhnya untuk
+//            tampilan yang lebih modern, elegan, dan responsif.
+// ================================================================= */
+
+/* --- 1. Import Font & Konfigurasi Dasar --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap');
+
+/* Variabel Warna untuk konsistensi */
+:root {
+  --background-dark: #1a2c28; /* Hijau hutan yang sangat gelap */
+  --primary-green: #2a4d3e; /* Hijau yang lebih cerah untuk panel */
+  --accent-gold: #e2b344; /* Emas untuk highlight dan tombol penting */
+  --text-light: #f5f5f5; /* Teks putih gading */
+  --text-dark: #121212; /* Teks gelap untuk kontras */
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --border-color: rgba(226, 179, 68, 0.4);
+  /* [[PENAMBAHAN]] Warna untuk notifikasi */
+  --accent-red: #e53e3e;
+  --accent-blue: #3b82f6;
+}
+
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: #121212;
-  color: #e0e0e0;
-  font-family: 'Montserrat', sans-serif;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  overflow-x: hidden; /* Mencegah scroll horizontal */
   display: flex;
-  flex-direction: column; /* Membuat navbar dan area game tersusun vertikal */
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-h1,
-h2,
-h3 {
-  font-family: 'Raleway', sans-serif;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #ffd700;
-}
-
-/* ===== NAVBAR ===== */
+/* --- 2. Navbar & Elemen Navigasi --- */
 .navbar {
-  width: 100%;
-  padding: 10px 30px;
-  background-color: #1f1f1f;
-  border-bottom: 2px solid #333;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-sizing: border-box; /* Agar padding tidak menambah lebar */
-  flex-shrink: 0; /* Mencegah navbar menyusut */
+  padding: 1rem 2rem;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+  border-bottom: 1px solid var(--border-color);
+  position: absolute;
+  width: 100%;
+  z-index: 1010;
 }
 
 .nav-title {
-  font-size: 1.8em;
-  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: var(--accent-gold);
+  text-shadow: 2px 2px 5px var(--shadow-color);
+}
+
+.navbar div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#user-info {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
 }
 
 .nav-button {
-  font-family: 'Raleway', sans-serif;
-  font-size: 1em;
-  font-weight: 700;
-  color: #ffd700;
-  background-color: #333;
-  border: 1px solid #ffd700;
-  border-radius: 5px;
-  padding: 8px 16px;
+  background-color: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--text-light);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
   cursor: pointer;
   transition:
-    background-color 0.3s,
-    color 0.3s;
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.2s ease;
+  text-shadow: 1px 1px 2px var(--shadow-color);
 }
 
 .nav-button:hover {
-  background-color: #ffd700;
-  color: #121212;
+  background-color: var(--accent-gold);
+  color: var(--text-dark);
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
 }
 
-/* ===== AREA GAME UTAMA ===== */
+/* --- 3. Kontainer Game & Canvas --- */
 #game-container {
-  flex-grow: 1; /* Mengambil sisa ruang vertikal yang tersedia */
-  width: 100%;
+  flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  box-sizing: border-box;
+  padding: 100px 20px 20px 20px;
+  position: relative;
+  width: 100%;
 }
 
 canvas {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
   background-image: url(assets/PNG/background.png);
   background-size: cover;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 2px solid #444;
-  border-radius: 8px;
+  background-position: center;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px var(--shadow-color);
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
+  aspect-ratio: 1200 / 680;
 }
 
-/* ===== POP-UP MODAL BANTUAN ===== */
-#help-modal-overlay {
+#canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 5;
+  backdrop-filter: blur(5px);
+}
+
+#canvas-overlay h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--accent-gold);
+}
+
+/* --- 4. Modal Umum --- */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.75);
-  z-index: 1000;
-
-  /* Menggunakan flex untuk memposisikan modal di tengah */
-  display: none; /* Diubah menjadi 'flex' oleh JavaScript */
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: none; /* Diubah oleh JS */
   justify-content: center;
   align-items: center;
+  z-index: 1200;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-#help-modal-content {
-  position: relative;
-  background-color: #1f1f1f;
-  border: 1px solid #ffd700;
-  border-radius: 10px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+.modal-content {
+  background-color: var(--primary-green);
+  padding: 2.5rem;
+  border-radius: 15px;
   width: 90%;
-  max-width: 700px;
-  max-height: 85vh;
-  padding: 25px 40px;
-  overflow-y: auto; /* Aktifkan scroll jika konten terlalu panjang */
-  animation: fadeIn 0.3s ease-in-out;
+  max-width: 500px;
+  position: relative;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  transform: scale(0.9);
+  transition: transform 0.4s ease;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+.modal-overlay.active .modal-content {
+  transform: scale(1);
+}
+
+.modal-content h2 {
+  font-family: 'Playfair Display', serif;
+  color: var(--accent-gold);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
 }
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 15px;
+  right: 20px;
   background: none;
   border: none;
-  font-size: 2em;
-  color: #777;
+  color: var(--text-light);
+  font-size: 2.5rem;
+  font-weight: bold;
   cursor: pointer;
+  transition:
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+.close-button:hover {
+  color: var(--accent-gold);
+  transform: rotate(90deg);
+}
+
+/* --- 5. Elemen Form di dalam Modal --- */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+form input,
+form select {
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+}
+form input::placeholder {
+  color: rgba(245, 245, 245, 0.5);
+}
+
+.form-button {
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--accent-gold);
+  color: var(--text-dark);
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-button:hover {
+  background-color: #f7c55d;
+  box-shadow: 0 0 20px rgba(226, 179, 68, 0.5);
+  transform: translateY(-2px);
+}
+
+.form-switch {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.form-switch a {
+  color: var(--accent-gold);
+  font-weight: bold;
+  text-decoration: none;
+}
+.form-switch a:hover {
+  text-decoration: underline;
+}
+
+/* [[PENAMBAHAN]] Style untuk pesan error/sukses di dalam form */
+.form-message {
+  text-align: center;
+  color: var(--accent-red);
+  margin-bottom: 1rem;
+  min-height: 1.2em;
+  font-weight: 500;
   transition: color 0.3s;
 }
-
-.close-button:hover {
-  color: #ffffff;
+.form-message.success {
+  color: var(--accent-blue);
 }
 
-/* Styling konten di dalam modal */
-#help-modal-content h2 {
-  text-align: center;
-  border-bottom: 2px solid #ffd700;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
+/* --- 6. Modal Spesifik (Help, Shop, Leaderboard, Withdraw) --- */
+#help-modal-content,
+#leaderboard-modal-content,
+#settings-modal-content {
+  max-width: 700px;
+}
+#shop-modal-content {
+  max-width: 800px;
+}
+#withdraw-modal-content {
+  max-width: 550px;
 }
 
+/* ... (Style spesifik untuk modal help, shop, leaderboard, withdraw tetap sama) ... */
 #help-modal-content h3 {
-  text-align: left;
-  border-left: 4px solid #ffd700;
-  padding-left: 10px;
-  margin-top: 30px;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
 }
-
-#help-modal-content p,
 #help-modal-content ul {
-  text-align: left;
-  line-height: 1.8;
+  list-style-type: '★ ';
+  padding-left: 1.5rem;
+  color: var(--accent-gold);
 }
-
-#help-modal-content ul {
-  list-style-type: none;
-  padding-left: 15px;
+#help-modal-content li {
+  margin-bottom: 0.5rem;
+  color: var(--text-light);
+  padding-left: 0.5rem;
 }
-
 #chip-table {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 1rem;
   border-collapse: collapse;
 }
-
 #chip-table th,
 #chip-table td {
-  padding: 12px;
-  text-align: center;
-  border-bottom: 1px solid #333;
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
 }
-
 #chip-table th {
-  font-size: 1.2em;
+  color: var(--accent-gold);
 }
-
-#chip-table td img {
-  height: 40px;
+#chip-table img {
+  width: 40px;
   vertical-align: middle;
 }
-
 .credits {
+  margin-top: 2rem;
   text-align: center;
-  margin-top: 30px;
-  font-size: 0.9em;
-  color: #777;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+.credits a {
+  color: var(--accent-gold);
+}
+.shop-description {
+  text-align: center;
+  margin-top: -1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+.shop-packages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+.shop-package-card {
+  background-color: var(--background-dark);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.shop-package-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(226, 179, 68, 0.4);
+}
+.package-chips {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+.package-price {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  opacity: 0.9;
+}
+.package-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--accent-gold);
+  color: var(--text-dark);
+  padding: 0.2rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.package-tag.best-value {
+  background-color: #e53e3e;
+  color: var(--text-light);
+}
+.leaderboard-description {
+  text-align: center;
+  margin-top: -1.5rem;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+#leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+#leaderboard-table thead {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+#leaderboard-table th,
+#leaderboard-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+#leaderboard-table th {
+  font-family: 'Playfair Display', serif;
+  color: var(--accent-gold);
+  font-size: 1.2rem;
+}
+#leaderboard-table tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+#leaderboard-table tbody tr:hover {
+  background-color: rgba(226, 179, 68, 0.1);
+}
+#leaderboard-table td:first-child {
+  font-weight: bold;
+  color: var(--accent-gold);
+  font-size: 1.1rem;
+  text-align: center;
+}
+.loading-leaderboard {
+  text-align: center !important;
+  font-style: italic;
+  opacity: 0.7;
+  padding: 2rem !important;
+}
+.withdraw-info {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+.withdraw-info strong {
+  color: var(--accent-gold);
+}
+.form-divider {
+  border: none;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 1.5rem 0;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.form-group small {
+  display: block;
+  margin-top: 0.5rem;
+  opacity: 0.8;
 }
 
-.credits a {
-  color: #999;
+/* --- 7. [[PENAMBAHAN]] Notifikasi Kustom --- */
+#notification-container {
+  position: fixed;
+  top: 90px;
+  left: 20px; /* DIUBAH: dari 'right' ke 'left' */
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.notification {
+  min-width: 320px;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: var(--text-light);
+  font-weight: 500;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  border-left: 5px solid;
+  /* DIUBAH: Nama animasi dan transform awal */
+  animation:
+    slideInLeft 0.5s ease-out forwards,
+    fadeOutLeft 0.5s ease-in 4.5s forwards;
+  transform: translateX(-120%);
+  background-color: var(--primary-green);
+}
+.notification.success {
+  border-left-color: var(--accent-blue);
+}
+.notification.error {
+  border-left-color: var(--accent-red);
+}
+
+/* DIUBAH: Keyframes untuk animasi dari kiri */
+@keyframes slideInLeft {
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes fadeOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+}
+
+/* --- 8. [[PENAMBAHAN]] Loading State untuk Tombol --- */
+.form-button:disabled {
+  background-color: #a0843e;
+  cursor: not-allowed;
+}
+.form-button.loading {
+  color: transparent; /* Sembunyikan teks saat loading */
+}
+.form-button.loading::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 4px solid transparent;
+  border-top-color: var(--text-dark); /* Warna spinner */
+  border-radius: 50%;
+  animation: button-loading-spinner 1s ease infinite;
+}
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* --- 9. [[PENAMBAHAN]] Modal Pengaturan --- */
+.settings-section {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1.5rem;
+}
+.settings-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+.settings-section h3 {
+  font-family: 'Playfair Display', serif;
+  color: var(--accent-gold);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+.form-group-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.form-group-inline label {
+  margin-bottom: 0;
+}
+.form-group-inline select {
+  padding: 0.5rem;
+}
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+input:checked + .slider {
+  background-color: var(--accent-gold);
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--accent-gold);
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* --- 10. Hamburger Menu --- */
+.hamburger-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.hamburger-button {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 8px;
+  z-index: 1060;
+}
+.hamburger-button span {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: var(--text-light);
+  border-radius: 3px;
+  transition: all 0.3s ease-in-out;
+}
+.hamburger-button.active span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburger-button.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-button.active span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.hamburger-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--primary-green);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 25px var(--shadow-color);
+  width: 200px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease;
+  z-index: 1050;
+}
+.hamburger-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.hamburger-menu .nav-button {
+  width: 100%;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  padding: 0.75rem 1rem;
+  box-shadow: none;
+}
+.hamburger-menu .nav-button:hover {
+  background-color: rgba(226, 179, 68, 0.1);
+  color: var(--accent-gold);
+}
+
+/* --- 11. Overlay Game Over --- */
+#game-over-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #f5f5f5;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 1005;
+  backdrop-filter: blur(5px);
+}
+.game-over-content {
+  font-family: 'Roboto', sans-serif;
+}
+.game-over-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  color: var(--accent-red);
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+}
+.game-over-content p {
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+/* --- 12. Responsivitas --- */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    position: relative;
+  }
+  .nav-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  #game-container {
+    padding-top: 1rem;
+  }
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+  .modal-content h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar div {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .nav-button {
+    flex-grow: 1;
+  }
+  #user-info {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    order: -1;
+  }
+  .notification {
+    min-width: unset;
+    width: calc(100vw - 40px);
+  }
+}
+
+/* [[PENAMBAHAN]] Style khusus untuk Tombol Peringkat */
+#leaderboard-button {
+  background-color: var(--accent-gold);
+  color: var(--text-dark);
+  border-color: var(--accent-gold);
+  box-shadow: 0 4px 15px rgba(226, 179, 68, 0.3);
+}
+
+#leaderboard-button:hover {
+  background-color: #f7c55d; /* Warna emas lebih terang saat di-hover */
+  box-shadow: 0 0 20px rgba(226, 179, 68, 0.5); /* Shadow kuning sesuai permintaan */
+}
+
+#stop-judi-button {
+  text-decoration: none; /* Menghilangkan garis bawah dari link */
 }
