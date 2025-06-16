@@ -18,8 +18,7 @@ const db = require('./db');
 // });
 
 const app = express();
-const port = 3001;
-
+const port = process.env.PORT || 3001;
 // === MIDDLEWARE SETUP ===
 app.use(cors());
 app.use(express.json());
