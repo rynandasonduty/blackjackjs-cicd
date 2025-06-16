@@ -14,7 +14,12 @@
     "fix-all": "npm run lint:fix && npm run format",
     "server": "node server/index.js",
     "start-frontend": "http-server -c-1",
-    "dev": "concurrently \"npm run start-frontend\" \"npm run server\""
+    "dev": "concurrently \"npm run start-frontend\" \"npm run server\"",
+    "start": "node server/index.js"
+
+  },
+   "engines": {
+    "node": "18.x"
   },
   "keywords": [
     "blackjack",

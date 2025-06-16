@@ -1,6 +1,6 @@
 /* global init*/
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = window.VITE_API_URL || 'http://localhost:3001/api';
 
 // --- FUNGSI GLOBAL ---
 

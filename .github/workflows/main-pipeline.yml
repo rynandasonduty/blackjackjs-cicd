@@ -1,0 +1,133 @@
+# Nama workflow yang akan muncul di tab "Actions" GitHub Anda.
+name: CI/CD - Main Pipeline (Test, Deploy Frontend, Merge to Production)
+
+# Pemicu: Workflow ini akan berjalan saat ada...
+on:
+  # ...push ke branch `main`.
+  push:
+    branches: [main]
+  # ...atau saat ada Pull Request yang ditargetkan ke branch `main`.
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ===============================================================
+  # JOB 1: TES & VERIFIKASI KODE (CONTINUOUS INTEGRATION)
+  # ===============================================================
+  # Job ini berjalan pada PUSH dan PULL REQUEST ke `main`.
+  # Tujuannya adalah memastikan kode baru berkualitas tinggi.
+  test-and-verify:
+    name: Run Tests, Linter, and Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      # Langkah 1: Mengunduh kode dari repositori Anda
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Langkah 2: Menyiapkan lingkungan Node.js versi 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # Langkah 3: Menginstal semua dependensi proyek dengan cepat
+      - name: Install Dependencies
+        run: npm ci
+
+      # Langkah 4: Menjalankan ESLint untuk memeriksa kualitas kode.
+      # Sebaiknya CI hanya memeriksa, bukan memperbaiki. Perbaikan (lint:fix) dilakukan di lokal.
+      - name: Run ESLint
+        run: npm run lint
+
+      # Langkah 5: Menjalankan Prettier untuk memeriksa format kode
+      - name: Check Code Formatting
+        run: npm run format:check
+
+      # Langkah 6: Menjalankan audit keamanan pada dependensi
+      - name: Run NPM Security Audit
+        run: npm run audit
+
+      # Langkah 7: Menjalankan semua unit test dan menghasilkan laporan cakupan (coverage)
+      - name: Run Tests with Coverage
+        run: npm run test
+
+      # Langkah 8: Mengunggah ringkasan cakupan tes sebagai artefak
+      - name: Upload Test Coverage Summary
+        if: always() # Selalu jalankan langkah ini, bahkan jika tes gagal, agar laporannya ada.
+        run: |
+          echo "### Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          if [ -f coverage/coverage-summary.json ]; then
+            cat coverage/coverage-summary.json >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No coverage summary found." >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # ===============================================================
+  # JOB 2: DEPLOY FRONTEND (CONTINUOUS DEPLOYMENT - Part 1)
+  # ===============================================================
+  # Job ini HANYA berjalan pada PUSH ke `main` dan JIKA job `test-and-verify` berhasil.
+  # Ini adalah gerbang pengaman pertama sebelum merge.
+  deploy-frontend:
+    name: Deploy Frontend to Netlify
+    needs: test-and-verify # <-- Ketergantungan: Harus menunggu job `test-and-verify` selesai.
+    if: github.event_name == 'push' # <-- Kondisi: Hanya berjalan saat ada `push`, bukan pada `pull_request`.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure Production API URL
+        # Mengganti placeholder di js/api.js dengan URL backend production dari GitHub Secrets.
+        run: sed -i "s|window.VITE_API_URL|'${{ secrets.PRODUCTION_API_URL }}'|" js/api.js
+
+      - name: Build Frontend Assets
+        # Membuat folder 'dist' dan hanya menyalin aset frontend yang akan di-deploy.
+        run: |
+          mkdir dist
+          cp index.html style.css dist/
+          cp -r js assets dist/
+
+      - name: Deploy to Netlify
+        # Menggunakan GitHub Action untuk men-deploy folder 'dist' ke Netlify.
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: ./dist
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  # ===============================================================
+  # JOB 3: AUTO-MERGE KE PRODUCTION (CONTINUOUS DEPLOYMENT - Part 2)
+  # ===============================================================
+  # Job ini HANYA berjalan pada PUSH ke `main` dan JIKA job `deploy-frontend` berhasil.
+  # Ini adalah langkah final yang memicu deployment backend.
+  automerge-to-production:
+    name: Auto-merge to Production Branch
+    needs: deploy-frontend # <-- Ketergantungan: Harus menunggu deploy frontend berhasil.
+    if: github.event_name == 'push' # <-- Kondisi: Hanya berjalan saat ada `push`.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # Mengambil seluruh history git agar bisa melakukan merge.
+          fetch-depth: 0
+          # Menggunakan Personal Access Token agar memiliki izin untuk push ke branch 'production'.
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Configure Git User
+        # Mengatur identitas bot yang akan melakukan commit merge.
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge and Push to Production
+        # Skrip untuk pindah ke branch production, menggabungkan `main`, dan push.
+        run: |
+          git switch production
+          git merge main --no-ff -m "Auto-merge main into production"
+          git push origin production

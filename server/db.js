@@ -1,20 +1,11 @@
 // file: server/db.js
+const mysql = require('mysql2');
 
-// --- PERBAIKAN DIMULAI DI SINI ---
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, './.env') });
-// --- PERBAIKAN SELESAI ---
+// Heroku akan menyediakan variabel JAWSDB_URL secara otomatis.
+// Jika variabel itu tidak ada (artinya kita di lokal), gunakan koneksi cadangan.
+const connectionUrl = process.env.JAWSDB_URL || 'mysql://user:password@localhost:3306/blackjack_db';
 
-const mysql = require('mysql2/promise');
+const pool = mysql.createPool(connectionUrl);
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
-
-module.exports = pool;
+// Ekspor promise-based pool untuk async/await
+module.exports = pool.promise();
