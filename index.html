@@ -3,26 +3,78 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BlackJackJS - Game Kartu Blackjack</title>
+    <title>BlackJackJS</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="assets/PNG/Cards/cardClubsJ.png" type="image/png" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Raleway:400,700&display=swap"
-      rel="stylesheet"
-    />
   </head>
-  <body onload="init()">
+  <body>
+    <div id="notification-container"></div>
+
     <nav class="navbar">
       <h1 class="nav-title">BlackJackJS</h1>
-      <button id="help-button" class="nav-button">Bantuan</button>
+      <div>
+        <span id="user-info" style="display: none"></span>
+        <button id="leaderboard-button" class="nav-button">Peringkat</button>
+        <button id="logout-button" class="nav-button" style="display: none">
+          Logout
+        </button>
+        <button id="login-register-button" class="nav-button">
+          Login / Register
+        </button>
+
+        <div class="hamburger-container">
+          <button id="hamburger-button" class="hamburger-button">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div id="hamburger-menu" class="hamburger-menu">
+            <button
+              id="buy-chip-button"
+              class="nav-button"
+              style="display: none"
+            >
+              Toko Chip
+            </button>
+            <button
+              id="withdraw-button"
+              class="nav-button"
+              style="display: none"
+            >
+              Withdraw
+            </button>
+            <button id="help-button" class="nav-button">Bantuan</button>
+            <button
+              id="settings-button"
+              class="nav-button"
+              style="display: none"
+            >
+              Pengaturan
+            </button>
+            <a
+              href="https://s.id/bersamastopjudol"
+              target="_blank"
+              rel="noopener noreferrer"
+              id="stop-judi-button"
+              class="nav-button"
+            >
+              Anda Rungkad ?
+            </a>
+          </div>
+        </div>
+      </div>
     </nav>
 
     <main id="game-container">
-      <canvas id="canvas" width="1100" height="650"></canvas>
+      <div id="canvas-overlay">
+        <h2>Selamat Datang di BlackJackJS</h2>
+        <p>Silakan Login atau Register untuk mulai bermain.</p>
+      </div>
+      <canvas id="canvas" width="1200" height="680"></canvas>
     </main>
 
-    <div id="help-modal-overlay">
-      <div id="help-modal-content">
+    <div id="help-modal-overlay" class="modal-overlay">
+      <div id="help-modal-content" class="modal-content">
         <button id="close-modal-button" class="close-button">&times;</button>
         <h2>Cara Bermain</h2>
         <p>
@@ -30,7 +82,6 @@
           sedekat mungkin dengan 21 tanpa melebihinya. Klik pada chip untuk
           memasang taruhan, lalu tekan "Go" untuk memulai.
         </p>
-
         <h3>Fitur Game</h3>
         <ul>
           <li>
@@ -42,11 +93,10 @@
             Dealer adalah Ace.
           </li>
           <li>
-            <strong>Give Up</strong> – Menyerah dan dapatkan kembali separuh
+            <strong>Surrender</strong> – Menyerah dan dapatkan kembali separuh
             dari taruhan Anda.
           </li>
         </ul>
-
         <h3>Nilai Chip</h3>
         <table id="chip-table">
           <thead>
@@ -61,7 +111,7 @@
               <td>
                 <img
                   src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipBlueWhite_side.png"
-                  alt="Chip 500"
+                  alt="Chip Biru"
                 />
               </td>
             </tr>
@@ -70,7 +120,7 @@
               <td>
                 <img
                   src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipBlackWhite_side.png"
-                  alt="Chip 100"
+                  alt="Chip Hitam"
                 />
               </td>
             </tr>
@@ -79,7 +129,7 @@
               <td>
                 <img
                   src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipGreenWhite_side.png"
-                  alt="Chip 25"
+                  alt="Chip Hijau"
                 />
               </td>
             </tr>
@@ -88,7 +138,7 @@
               <td>
                 <img
                   src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipRedWhite_side.png"
-                  alt="Chip 5"
+                  alt="Chip Merah"
                 />
               </td>
             </tr>
@@ -97,7 +147,7 @@
               <td>
                 <img
                   src="https://raw.githubusercontent.com/Oli8/BlackJackJs/master/assets/PNG/Chips/chipWhiteBlue_side.png"
-                  alt="Chip 1"
+                  alt="Chip Putih"
                 />
               </td>
             </tr>
@@ -115,33 +165,277 @@
       </div>
     </div>
 
+    <div id="auth-modal-overlay" class="modal-overlay">
+      <div id="auth-modal-content" class="modal-content">
+        <button id="close-auth-modal-button" class="close-button">
+          &times;
+        </button>
+        <div id="login-view">
+          <h2>Login</h2>
+          <form id="login-form">
+            <p class="form-message"></p>
+            <input type="email" id="login-email" placeholder="Email" required />
+            <input
+              type="password"
+              id="login-password"
+              placeholder="Password"
+              required
+            />
+            <button type="submit" class="form-button">Login</button>
+            <p class="form-switch">
+              Belum punya akun?
+              <a href="#" id="show-register">Daftar di sini</a>
+            </p>
+          </form>
+        </div>
+        <div id="register-view" style="display: none">
+          <h2>Register</h2>
+          <form id="register-form">
+            <p class="form-message"></p>
+            <input
+              type="text"
+              id="register-username"
+              placeholder="Username"
+              required
+            />
+            <input
+              type="email"
+              id="register-email"
+              placeholder="Email"
+              required
+            />
+            <input
+              type="password"
+              id="register-password"
+              placeholder="Password"
+              required
+            />
+            <button type="submit" class="form-button">Register</button>
+            <p class="form-switch">
+              Sudah punya akun? <a href="#" id="show-login">Login di sini</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="shop-modal-overlay" class="modal-overlay">
+      <div id="shop-modal-content" class="modal-content">
+        <button id="close-shop-modal-button" class="close-button">
+          &times;
+        </button>
+        <h2>Toko Chip</h2>
+        <p class="shop-description">
+          Pilih paket untuk menambah saldo chip Anda dan lanjutkan permainan!
+        </p>
+        <div class="shop-packages">
+          <div
+            class="shop-package-card"
+            data-package-id="CHIP_15K"
+            data-amount="15000"
+            data-chip-amount="200"
+          >
+            <div class="package-chips">200</div>
+            <div class="package-price">Rp 15.000</div>
+            <div class="package-tag">Populer</div>
+          </div>
+          <div
+            class="shop-package-card"
+            data-package-id="CHIP_50K"
+            data-amount="50000"
+            data-chip-amount="1000"
+          >
+            <div class="package-chips">1000</div>
+            <div class="package-price">Rp 50.000</div>
+          </div>
+          <div
+            class="shop-package-card"
+            data-package-id="CHIP_100K"
+            data-amount="75000"
+            data-chip-amount="2500"
+          >
+            <div class="package-chips">2500</div>
+            <div class="package-price">Rp 75.000</div>
+            <div class="package-tag best-value">Paling Hemat!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="leaderboard-modal-overlay" class="modal-overlay">
+      <div id="leaderboard-modal-content" class="modal-content">
+        <button id="close-leaderboard-modal-button" class="close-button">
+          &times;
+        </button>
+        <h2>Papan Peringkat</h2>
+        <p class="leaderboard-description">Liga Penjudi Sejati</p>
+        <table id="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Peringkat</th>
+              <th>Nama Pemain</th>
+              <th>Jumlah Chip</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-table-body">
+            <tr>
+              <td colspan="3" class="loading-leaderboard">Memuat data...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="withdraw-modal-overlay" class="modal-overlay">
+      <div id="withdraw-modal-content" class="modal-content">
+        <button id="close-withdraw-modal-button" class="close-button">
+          &times;
+        </button>
+        <h2>Withdraw Chips</h2>
+        <p class="withdraw-info">
+          Saldo Anda saat ini:
+          <strong id="withdraw-current-chips">0</strong> Chips
+        </p>
+        <p class="withdraw-info">
+          Minimal withdraw: <strong>7.000</strong> Chips (setara dengan Rp
+          100.000)
+        </p>
+
+        <form id="withdraw-form">
+          <div class="form-group">
+            <label for="withdraw-chip-amount"
+              >Jumlah Chip untuk di-Withdraw:</label
+            >
+            <input
+              type="number"
+              id="withdraw-chip-amount"
+              placeholder="Contoh: 7000"
+              min="7000"
+              required
+            />
+            <small
+              >Akan dikonversi menjadi:
+              <strong id="withdraw-idr-equivalent">Rp 0</strong></small
+            >
+          </div>
+
+          <hr class="form-divider" />
+
+          <div class="form-group">
+            <label for="withdraw-bank-code">Pilih Bank Tujuan:</label>
+            <select id="withdraw-bank-code" required>
+              <option value="" disabled selected>Pilih Bank...</option>
+              <option value="BCA">BCA</option>
+              <option value="BNI">BNI</option>
+              <option value="BRI">BRI</option>
+              <option value="MANDIRI">BANK MANDIRI</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="withdraw-account-number">Nomor Rekening:</label>
+            <input
+              type="text"
+              id="withdraw-account-number"
+              placeholder="Masukkan nomor rekening"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="withdraw-account-name">Nama Pemilik Rekening:</label>
+            <input
+              type="text"
+              id="withdraw-account-name"
+              placeholder="Nama sesuai buku tabungan"
+              required
+            />
+          </div>
+
+          <button type="submit" class="form-button">Request Withdraw</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="settings-modal-overlay" class="modal-overlay">
+      <div id="settings-modal-content" class="modal-content">
+        <button id="close-settings-modal-button" class="close-button">
+          &times;
+        </button>
+        <h2>Pengaturan</h2>
+
+        <div class="settings-section">
+          <h3>Umum</h3>
+          <div class="form-group-inline">
+            <label for="music-toggle">Musik Latar</label>
+            <label class="switch">
+              <input type="checkbox" id="music-toggle" checked />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="form-group-inline">
+            <label for="language-select">Bahasa</label>
+            <select id="language-select">
+              <option value="id">Bahasa Indonesia</option>
+              <option value="en" disabled>English (Coming Soon)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h3>Ganti Username</h3>
+          <form id="change-username-form">
+            <div class="form-group">
+              <label for="new-username">Username Baru:</label>
+              <input
+                type="text"
+                id="new-username"
+                placeholder="Masukkan username baru"
+                required
+              />
+            </div>
+            <button type="submit" class="form-button">Simpan Username</button>
+          </form>
+        </div>
+
+        <div class="settings-section">
+          <h3>Ganti Password</h3>
+          <form id="change-password-form">
+            <div class="form-group">
+              <label for="old-password">Password Lama:</label>
+              <input
+                type="password"
+                id="old-password"
+                placeholder="Masukkan password saat ini"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="new-password">Password Baru:</label>
+              <input
+                type="password"
+                id="new-password"
+                placeholder="Minimal 6 karakter"
+                required
+              />
+            </div>
+            <button type="submit" class="form-button">Simpan Password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-over-overlay">
+      <div class="game-over-content"></div>
+    </div>
+
     <script src="js/create.js"></script>
     <script src="js/conf.js"></script>
     <script src="js/card.js"></script>
     <script src="js/button.js"></script>
     <script src="js/game.js"></script>
     <script src="js/CreateJSTextInput.js"></script>
-
-    <script>
-      const helpButton = document.getElementById('help-button');
-      const closeModalButton = document.getElementById('close-modal-button');
-      const modalOverlay = document.getElementById('help-modal-overlay');
-
-      helpButton.addEventListener('click', () => {
-        modalOverlay.style.display = 'flex';
-      });
-
-      const closeModal = () => {
-        modalOverlay.style.display = 'none';
-      };
-
-      closeModalButton.addEventListener('click', closeModal);
-      modalOverlay.addEventListener('click', (event) => {
-        // Hanya tutup jika yang diklik adalah area overlay, bukan konten modalnya
-        if (event.target === modalOverlay) {
-          closeModal();
-        }
-      });
-    </script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/api.js"></script>
   </body>
 </html>
