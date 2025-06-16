@@ -143,8 +143,10 @@ app.post(
         },
         description: `Pembelian ${chipAmount} Chips untuk game BlackjackJS`,
         // Ganti dengan URL Heroku Anda
-        success_redirect_url: 'https://blackjackjs-22775fe9e0ef.herokuapp.com/?payment=success', // <-- UBAH BARIS INI
-        failure_redirect_url: 'https://blackjackjs-22775fe9e0ef.herokuapp.com/?payment=failed', // <-- UBAH BARIS INI
+        success_redirect_url:
+          'https://blackjackjs-22775fe9e0ef.herokuapp.com/?payment=success', // <-- UBAH BARIS INI
+        failure_redirect_url:
+          'https://blackjackjs-22775fe9e0ef.herokuapp.com/?payment=failed', // <-- UBAH BARIS INI
       };
 
       const authToken = Buffer.from(`${SECRET_KEY}:`).toString('base64');
