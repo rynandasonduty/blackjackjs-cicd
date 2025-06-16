@@ -1,5 +1,3 @@
-
-
 /* global Button, Card, rand, suits, deckNumber, width, height, updateBalanceOnServer, openModal, showNotification */
 
 // =================================================================

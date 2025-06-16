@@ -3,7 +3,8 @@ const mysql = require('mysql2');
 
 // Heroku akan menyediakan variabel JAWSDB_URL secara otomatis.
 // Jika variabel itu tidak ada (artinya kita di lokal), gunakan koneksi cadangan.
-const connectionUrl = process.env.JAWSDB_URL || 'mysql://user:password@localhost:3306/blackjack_db';
+const connectionUrl =
+  process.env.JAWSDB_URL || 'mysql://user:password@localhost:3306/blackjack_db';
 
 const pool = mysql.createPool(connectionUrl);
 

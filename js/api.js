@@ -185,7 +185,6 @@ window.initiateXenditPayment = async function (paket) {
   }
 };
 
-
 async function updateBalanceOnServer(newBalance) {
   const token = localStorage.getItem('token');
   if (!token) {
