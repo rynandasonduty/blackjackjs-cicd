@@ -6,7 +6,13 @@ const imgs = {
       blue: 'cardBack_blue5',
       red: 'cardBack_red5',
     },
-    get: function (suit, value) {
+    /**
+     * Get card image path
+     * @param {string} suit - Card suit
+     * @param {string|number} value - Card value
+     * @returns {string} Image path
+     */
+    get(suit, value) {
       return `${this.path}card${suit}${value}.${this.ext}`;
     },
   },
@@ -33,15 +39,33 @@ const imgs = {
       main: 'chipWhiteBlue',
       side: 'chipWhiteBlue_side',
     },
-    get: function (color, type = 'main') {
+    /**
+     * Get chip image path
+     * @param {string} color - Chip color
+     * @param {string} type - Chip type (main or side)
+     * @returns {string} Image path
+     */
+    get(color, type = 'main') {
       return `${this.path}${this[color][type]}.${this.ext}`;
     },
   },
 };
 
+/**
+ * Number of decks used in the game
+ * @type {number}
+ */
 const deckNumber = 6;
+
+/**
+ * Available card suits
+ * @type {string[]}
+ */
 const suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
 
+/**
+ * Game messages configuration
+ */
 const messages = {
   bet: 'Bet !',
   win: 'You win !',
@@ -52,7 +76,7 @@ const messages = {
     insurance: { msg: 'You can not use insurance', x: 725 },
     insured: { msg: 'insurance used !', x: 800 },
     double: { msg: 'You can not double now', x: 725 },
-    funds: { msg: "You haven't got enough funds", x: 680 },
+    funds: { msg: 'You haven\'t got enough funds', x: 680 },
     hit: { msg: 'You can not hit anymore', x: 720 },
     doubled: { msg: 'Bet doubled !', x: 800 },
     giveUp: { msg: 'You can not give up now !', x: 720 },
@@ -60,27 +84,69 @@ const messages = {
   },
 };
 
+/**
+ * Canvas dimensions
+ */
 const width = 1100;
 const height = 650;
 
-createjs.Text.prototype.center = function (x = true, y = false) {
-  var bounds = this.getBounds();
-  if (x) {
-    this.x = width / 2 - bounds.width / 2;
-  }
-  if (y) {
-    this.y = height / 2 - bounds.height / 2;
-  }
-};
+/**
+ * Extend CreateJS Text with center method
+ */
+if (typeof createjs !== 'undefined' && createjs.Text) {
+  /**
+   * Center text horizontally and/or vertically
+   * @param {boolean} x - Center horizontally
+   * @param {boolean} y - Center vertically
+   */
+  createjs.Text.prototype.center = function center(x = true, y = false) {
+    const bounds = this.getBounds();
+    if (x) {
+      this.x = width / 2 - bounds.width / 2;
+    }
+    if (y) {
+      this.y = height / 2 - bounds.height / 2;
+    }
+  };
+}
 
+/**
+ * Generate random number between min and max (inclusive)
+ * @param {number} min - Minimum value
+ * @param {number} max - Maximum value
+ * @returns {number} Random number
+ */
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * Console log helper
+ * @param {*} v - Value to log
+ */
 function l(v) {
   console.log(v);
 }
 
+/**
+ * Console table helper
+ * @param {*} v - Value to display as table
+ */
 function t(v) {
   console.table(v);
+}
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    imgs,
+    deckNumber,
+    suits,
+    messages,
+    width,
+    height,
+    rand,
+    l,
+    t,
+  };
 }
