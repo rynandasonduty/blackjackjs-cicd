@@ -425,5 +425,5 @@ app.post('/api/webhooks/xendit', async (req, res) => {
 
 // === START SERVER ===
 app.listen(port, () => {
-  console.log(`🚀 Backend server berjalan di http://localhost:${port}`);
+  console.log(`🚀 Backend server berjalan di port ${port}`);
 });
