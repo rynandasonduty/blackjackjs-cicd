@@ -88,7 +88,9 @@ A comprehensive DevOps implementation for a JavaScript Blackjack game with autom
 - **Code Quality**: ESLint + Prettier
 - **CI/CD**: GitHub Actions
 - **Hosting**: Netlify
-- **Version Control**: Git with GitFlow methodology
+- **Version Control**: Git with GitFlow methodolog
+- **Database**: Jawles
+- **Backend Deployment**: Hiroku
 
 ### Key Features
 
@@ -107,7 +109,7 @@ A comprehensive DevOps implementation for a JavaScript Blackjack game with autom
 
 ```mermaid
 flowchart TD
-    A[👨‍💻 Developer] -->|Commit & Push| B[📦 GitHub Repository]
+    A[👨💻 Developer] -->|Commit & Push| B[📦 GitHub Repository]
     B --> C{🌿 Branch Type?}
 
     C -->|feature/*| D[🔍 PR Validation Pipeline]
@@ -129,34 +131,45 @@ flowchart TD
     E5 --> E6{🎯 Quality Gates Pass?}
 
     E6 -->|❌ No| E7[❌ Pipeline Failed]
-    E6 -->|✅ Yes| E8[🔄 Auto-merge to Production]
+    E6 -->|✅ Yes| F[🌐 Deploy to Netlify Frontend]
 
-    E8 --> F[🚀 CD Pipeline Triggered]
-    F --> F1[🏗️ Production Build]
+    F --> F1[🏗️ Frontend Build]
     F1 --> F2[📦 Asset Optimization]
-    F2 --> F3[🌐 Deploy to Netlify]
-    F3 --> F4[🔍 Health Check]
-    F4 --> F5{🏥 Deployment Healthy?}
+    F2 --> F3[🚀 Netlify Deployment]
+    F3 --> F4[🔍 Deployment Health Check]
+    F4 --> F5{🏥 Gateway Check Pass?}
 
-    F5 -->|❌ No| F6[🔄 Auto Rollback]
-    F5 -->|✅ Yes| F7[✅ Production Live]
+    F5 -->|❌ No| F6[🔄 Deployment Failed]
+    F5 -->|✅ Yes| G[🔄 Auto-merge to Production Branch]
 
-    F7 --> G[📊 Monitoring & Analytics]
-    G --> G1[📈 Performance Metrics]
-    G --> G2[🚨 Error Tracking]
-    G --> G3[📊 Usage Analytics]
+    G --> H[🚀 Production Branch Triggered]
+    H --> H1[🏗️ Backend Build]
+    H1 --> H2[📦 Server Optimization]
+    H2 --> H3[🚀 Auto Deploy to Heroku Backend]
+    H3 --> H4[🔍 Backend Health Check]
+    H4 --> H5{🏥 Backend Healthy?}
 
-    E7 --> H[📧 Notification System]
-    F6 --> H
-    H --> H1[📧 Team Alerts]
-    H --> H2[📱 Slack Notifications]
-    H --> H3[📊 Dashboard Updates]
+    H5 -->|❌ No| H6[🔄 Backend Rollback]
+    H5 -->|✅ Yes| I[✅ Full Stack Production Live]
+
+    I --> J[📊 Monitoring & Analytics]
+    J --> J1[📈 Performance Metrics]
+    J --> J2[🚨 Error Tracking]
+    J --> J3[📊 Usage Analytics]
+
+    E7 --> K[📧 Notification System]
+    F6 --> K
+    H6 --> K
+    K --> K1[📧 Team Alerts]
 
     style A fill:#e1f5fe
     style E fill:#e8f5e8
     style F fill:#fff3e0
-    style G fill:#f3e5f5
-    style H fill:#ffebee
+    style G fill:#e3f2fd
+    style H fill:#f1f8e9
+    style I fill:#e8f5e8
+    style J fill:#f3e5f5
+    style K fill:#ffebee
 ```
 
 ### Detailed Pipeline Stages
@@ -175,18 +188,26 @@ gantt
     Security Audit    :125, 155
     Unit Tests        :155, 200
     Coverage Report   :200, 230
-    Auto-merge        :230, 250
 
-    section CD Pipeline
-    Production Build  :250, 280
-    Asset Optimization :280, 310
+    section Quality Gates
+    Quality Assessment :230, 260
+    All Tests Validation :260, 280
+
+    section Frontend Deployment
+    Frontend Build    :280, 310
     Netlify Deploy    :310, 340
-    Health Check      :340, 360
+    Deployment Gateway Check :340, 360
+
+    section Production Pipeline
+    Auto-merge to Production :360, 380
+    Backend Build     :380, 410
+    Heroku Deploy (Backend) :410, 440
 
     section Monitoring
-    Performance Check :360, 390
-    Error Tracking    :360, 420
-    Analytics Update  :360, 420
+    Health Check      :440, 460
+    Performance Check :460, 490
+    Error Tracking    :460, 520
+    Analytics Update  :460, 520
 ```
 
 ---
@@ -208,17 +229,21 @@ graph TD
     F --> I[Security Audit]
     F --> J[Unit Tests]
 
-    J -->|All Pass| K[Auto-merge to production]
+    J -->|All Pass| K[Frontend Build]
     J -->|Fail| L[Block Deployment]
 
-    K --> M[CD Pipeline]
-    M --> N[Build Assets]
-    M --> O[Deploy to Netlify]
-    O --> P[Production Environment]
+    K --> M[Deploy to Netlify (Frontend)]
+    M --> N{Gateway Check}
+    N -->|Pass| O[Auto-merge to Production Branch]
+    N -->|Fail| P[Block Production Deploy]
 
-    P --> Q[Monitoring]
-    Q --> R[Performance Metrics]
-    Q --> S[Error Tracking]
+    O --> Q[Backend Build]
+    Q --> R[Deploy to Heroku (Backend)]
+    R --> S[Production Environment]
+
+    S --> T[Monitoring]
+    T --> U[Performance Metrics]
+    T --> V[Error Tracking]
 ```
 
 ### Infrastructure Components
@@ -230,7 +255,7 @@ graph TD
 | **Quality Gates**       | Code standards enforcement        | ESLint, Prettier, Jest              |
 | **Security Scanner**    | Vulnerability detection           | npm audit                           |
 | **Artifact Storage**    | Build artifacts and reports       | GitHub Actions artifacts            |
-| **Deployment Platform** | Production hosting                | Netlify CDN                         |
+| **Deployment Platform** | Production hosting                | Netlify CDN, Hiroku                 |
 | **Monitoring**          | Performance and error tracking    | GitHub Insights + Netlify Analytics |
 
 ---
@@ -1790,6 +1815,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-_Last Updated: June 13, 2025_  
+_Last Updated: June 17, 2025_  
 _Documentation Version: 2.1.0_  
-_Next Review Date: July 13, 2025_
+_Next Review Date: UNKNOWN_
