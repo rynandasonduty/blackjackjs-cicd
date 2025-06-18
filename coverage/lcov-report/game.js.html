@@ -1142,11 +1142,7 @@
 <a name='L1084'></a><a href='#L1084'>1084</a>
 <a name='L1085'></a><a href='#L1085'>1085</a>
 <a name='L1086'></a><a href='#L1086'>1086</a>
-<a name='L1087'></a><a href='#L1087'>1087</a>
-<a name='L1088'></a><a href='#L1088'>1088</a>
-<a name='L1089'></a><a href='#L1089'>1089</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L1087'></a><a href='#L1087'>1087</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2232,9 +2228,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-&nbsp;
-/* global Button, Card, rand, suits, deckNumber, width, height, updateBalanceOnServer, openModal, showNotification */
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* global Button, Card, rand, suits, deckNumber, width, height, updateBalanceOnServer, openModal, showNotification */
 &nbsp;
 // =================================================================
 // FILE: js/game.js (Versi Final)
@@ -2527,7 +2521,7 @@ function init(userData) {
       const alertContainer = <span class="cstat-no" title="statement not covered" >new createjs.Container();</span>
       const alertText = <span class="cstat-no" title="statement not covered" >new createjs.Text(</span>
         msg.msg,
-        'bold 22px \'Roboto\', sans-serif',
+        "bold 22px 'Roboto', sans-serif",
         '#f5f5f5'
       );
 <span class="cstat-no" title="statement not covered" >      alertText.textAlign = 'center';</span>
@@ -2789,7 +2783,7 @@ function init(userData) {
 &nbsp;
       const resultText = new createjs.Text(
         message,
-        'bold 42px \'Playfair Display\', serif',
+        "bold 42px 'Playfair Display', serif",
         '#f5f5f5'
       );
       resultText.textAlign = 'center';
@@ -3228,7 +3222,7 @@ function init(userData) {
     init(stageRef) {
       this.text = new createjs.Text(
         messages.bet,
-        'bold 40px \'Playfair Display\', serif',
+        "bold 40px 'Playfair Display', serif",
         '#e2b344'
       );
       this.text.x = layout.mainMessage.x;
@@ -3244,7 +3238,7 @@ function init(userData) {
   player.fundsText.init = function (stageRef) {
     this.text = new createjs.Text(
       `Chips: ${player.funds}`,
-      '22px \'Roboto\', sans-serif',
+      "22px 'Roboto', sans-serif",
       '#e2b344'
     );
     this.text.x = layout.chipInfo.x;
@@ -3258,7 +3252,7 @@ function init(userData) {
 &nbsp;
   player.name.text = new createjs.Text(
     player.name.value,
-    'bold 24px \'Roboto\', sans-serif',
+    "bold 24px 'Roboto', sans-serif",
     '#f5f5f5'
   );
   player.name.text.x = layout.playerInfo.x;
@@ -3268,7 +3262,7 @@ function init(userData) {
 &nbsp;
   player.scoreText = new createjs.Text(
     '',
-    'bold 24px \'Roboto\', sans-serif',
+    "bold 24px 'Roboto', sans-serif",
     '#e2b344'
   );
   player.scoreText.x = layout.scoreBox.playerX;
@@ -3278,7 +3272,7 @@ function init(userData) {
 &nbsp;
   bank.scoreText = new createjs.Text(
     '',
-    'bold 24px \'Roboto\', sans-serif',
+    "bold 24px 'Roboto', sans-serif",
     '#e2b344'
   );
   bank.scoreText.x = layout.scoreBox.bankX;
@@ -3334,7 +3328,7 @@ window.toggleMusic = <span class="fstat-no" title="function not covered" >fu</sp
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-06-16T21:22:41.791Z
+      at 2025-06-18T05:15:30.070Z
     </div>
     <script src="prettify.js"></script>
     <script>
