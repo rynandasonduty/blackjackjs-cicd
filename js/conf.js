@@ -68,7 +68,7 @@ const messages = {
     insurance: { msg: 'Insurance is not available' },
     insured: { msg: 'Insurance placed!' },
     double: { msg: 'You cannot double now' },
-    funds: { msg: 'You don\'t have enough chips' },
+    funds: { msg: "You don't have enough chips" },
     hit: { msg: 'You cannot hit anymore' },
     doubled: { msg: 'Bet Doubled!' },
     giveUp: { msg: 'You cannot surrender now' },
