@@ -611,7 +611,6 @@ pie
     "Branches" : 21.53
     "Functions" : 27.84
     "Lines" : 38.99
----
 
 ### Detailed Summary for `game.js`
 Here is the latest test coverage status for the main game logic file (`game.js`), generated on June 18, 2025.
