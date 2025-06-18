@@ -33,7 +33,6 @@ A comprehensive JavaScript Blackjack game with automated testing, quality assura
 - **Hosting**: Netlify (Frontend)
 - **Version Control**: Git with simplified branch strategy
 
-
 ### Key Features
 
 - Automated code quality enforcement with ESLint and Prettier[^1_1]
@@ -52,40 +51,38 @@ A comprehensive JavaScript Blackjack game with automated testing, quality assura
 graph TD
     A[👨‍💻 Developer] -->|Push/PR| B[📦 GitHub Repository]
     B --> C{🌿 Branch Type?}
-    
+
     C -->|main| D[🚀 CI Pipeline]
     C -->|feature/*| E[🔍 PR Validation]
-    
+
     D --> F[📋 Code Quality Gates]
     F --> G[🔍 ESLint Check]
     F --> H[🎨 Prettier Format]
     F --> I[🔒 Security Audit]
     F --> J[🧪 Jest Tests + Coverage]
-    
+
     J -->|✅ Pass| K[🌐 Deploy to Netlify]
     J -->|❌ Fail| L[🚫 Block Deployment]
-    
+
     K --> M[🔍 Deployment Health Check]
     M -->|✅ Success| N[✅ Production Live]
     M -->|❌ Fail| O[🔄 Rollback]
-    
+
     N --> P[📊 Monitoring & Analytics]
     P --> Q[📈 Performance Metrics]
     P --> R[🚨 Error Tracking]
 ```
 
-
 ### Infrastructure Components
 
-| Component | Purpose | Technology |
-| :-- | :-- | :-- |
-| **Source Control** | Code versioning and collaboration | GitHub |
-| **CI Runner** | Automated testing and validation | GitHub Actions (Ubuntu) |
-| **Quality Gates** | Code standards enforcement | ESLint, Prettier, Jest |
-| **Security Scanner** | Vulnerability detection | npm audit |
-| **Deployment Platform** | Production hosting | Netlify CDN |
-| **Monitoring** | Performance and error tracking | Netlify Analytics |
-
+| Component               | Purpose                           | Technology              |
+| :---------------------- | :-------------------------------- | :---------------------- |
+| **Source Control**      | Code versioning and collaboration | GitHub                  |
+| **CI Runner**           | Automated testing and validation  | GitHub Actions (Ubuntu) |
+| **Quality Gates**       | Code standards enforcement        | ESLint, Prettier, Jest  |
+| **Security Scanner**    | Vulnerability detection           | npm audit               |
+| **Deployment Platform** | Production hosting                | Netlify CDN             |
+| **Monitoring**          | Performance and error tracking    | Netlify Analytics       |
 
 ---
 
@@ -109,27 +106,25 @@ gitGraph
     commit id: "Auto-deploy to production"
 ```
 
-
 ### Branch Protection Rules
 
 #### Main Branch (`main`)
 
 - **Purpose**: Primary development and production branch[^1_1]
 - **Protection Rules**:
-    - Require pull request reviews (1 reviewer minimum)[^1_1]
-    - Require status checks to pass before merging[^1_1]
-    - Require branches to be up to date before merging[^1_1]
-    - Restrict direct pushes[^1_1]
+  - Require pull request reviews (1 reviewer minimum)[^1_1]
+  - Require status checks to pass before merging[^1_1]
+  - Require branches to be up to date before merging[^1_1]
+  - Restrict direct pushes[^1_1]
 - **Auto-deployment**: Successful CI runs trigger automatic deployment to Netlify[^1_1]
-
 
 #### Feature Branches (`feature/*`, `bugfix/*`, `hotfix/*`)
 
 - **Purpose**: Isolated development environments[^1_1]
 - **Naming Convention**:
-    - `feature/description` - New features[^1_1]
-    - `bugfix/issue-number` - Bug fixes[^1_1]
-    - `hotfix/critical-issue` - Production hotfixes[^1_1]
+  - `feature/description` - New features[^1_1]
+  - `bugfix/issue-number` - Bug fixes[^1_1]
+  - `hotfix/critical-issue` - Production hotfixes[^1_1]
 - **Lifecycle**: Created from `main`, merged back to `main` via PR[^1_1]
 
 ---
@@ -170,7 +165,6 @@ steps:
 - All unit tests must pass[^1_2]
 - Code coverage reports generated[^1_2]
 
-
 #### Stage 2: Frontend Deployment (`deploy-frontend`)
 
 ```yaml
@@ -189,7 +183,6 @@ steps:
 - Deploys to Netlify using GitHub Actions integration[^1_2]
 - Performs health checks post-deployment[^1_2]
 
-
 #### Stage 3: Production Merge (`automerge-to-production`)
 
 ```yaml
@@ -207,7 +200,6 @@ steps:
 - Performs non-fast-forward merge to maintain history[^1_2]
 - Triggers additional production workflows if configured[^1_2]
 
-
 ### Pipeline Execution Flow
 
 ```mermaid
@@ -216,11 +208,11 @@ sequenceDiagram
     participant GH as GitHub
     participant CI as CI Pipeline
     participant Netlify as Netlify
-    
+
     Dev->>GH: Push to main
     GH->>CI: Trigger test-and-verify
     CI->>CI: Run ESLint, Prettier, Tests
-    
+
     alt Tests Pass
         CI->>Netlify: Deploy frontend
         Netlify->>CI: Deployment success
@@ -231,7 +223,6 @@ sequenceDiagram
     end
 ```
 
-
 ---
 
 ## 🧪 Testing \& Code Coverage
@@ -240,13 +231,12 @@ sequenceDiagram
 
 Based on the coverage report from `game.js.html`[^1_3], the current test coverage metrics are:
 
-
-| Metric | Coverage | Status |
-| :-- | :-- | :-- |
-| **Lines** | 87.4% | ✅ Good |
-| **Functions** | 89.2% | ✅ Good |
-| **Branches** | 84.1% | ✅ Good |
-| **Statements** | 88.7% | ✅ Good |
+| Metric         | Coverage | Status  |
+| :------------- | :------- | :------ |
+| **Lines**      | 87.4%    | ✅ Good |
+| **Functions**  | 89.2%    | ✅ Good |
+| **Branches**   | 84.1%    | ✅ Good |
+| **Statements** | 88.7%    | ✅ Good |
 
 ### Coverage Breakdown by Function
 
@@ -257,7 +247,6 @@ The coverage report shows comprehensive testing of core game functions[^1_3]:
 - **Betting system**: Well covered (88.9%)[^1_3]
 - **Game state management**: Good coverage (85.4%)[^1_3]
 - **Win/lose conditions**: Comprehensive coverage (95.7%)[^1_3]
-
 
 ### Test Configuration
 
@@ -281,7 +270,6 @@ The coverage report shows comprehensive testing of core game functions[^1_3]:
 }
 ```
 
-
 ### Coverage Reporting
 
 The pipeline automatically generates and uploads coverage reports[^1_2]:
@@ -304,13 +292,11 @@ Based on the game implementation in `game.js`[^1_3], the Blackjack game includes
 - **Hand Management**: Handle player cards and calculate hand values[^1_3]
 - **Action Handling**: Process hit, stand, double, insurance, and surrender actions[^1_3]
 
-
 #### Dealer (Bank) Logic
 
 - **Automated Play**: Dealer follows standard Blackjack rules (hit on <17, stand on ≥17)[^1_3]
 - **Card Distribution**: Manages card dealing and face-up/face-down logic[^1_3]
 - **Blackjack Detection**: Identifies natural 21s for both player and dealer[^1_3]
-
 
 #### Game Flow Control
 
@@ -343,7 +329,7 @@ deckValue(deck) {
       total += card.value;
     }
   });
-  
+
   // Adjust for soft Aces
   while (total > 21 && aces > 0) {
     total -= 10;
@@ -352,7 +338,6 @@ deckValue(deck) {
   return total;
 }
 ```
-
 
 ### Game Features
 
@@ -367,12 +352,12 @@ deckValue(deck) {
 
 ### Required GitHub Secrets
 
-| Secret | Purpose | Required Scopes |
-| :-- | :-- | :-- |
-| `NETLIFY_AUTH_TOKEN` | Netlify deployment authentication | Deploy, Build hooks |
-| `NETLIFY_SITE_ID` | Target Netlify site identifier | Site management |
-| `GH_PAT` | GitHub Personal Access Token | repo, workflow |
-| `PRODUCTION_API_URL` | Backend API endpoint for production | N/A |
+| Secret               | Purpose                             | Required Scopes     |
+| :------------------- | :---------------------------------- | :------------------ |
+| `NETLIFY_AUTH_TOKEN` | Netlify deployment authentication   | Deploy, Build hooks |
+| `NETLIFY_SITE_ID`    | Target Netlify site identifier      | Site management     |
+| `GH_PAT`             | GitHub Personal Access Token        | repo, workflow      |
+| `PRODUCTION_API_URL` | Backend API endpoint for production | N/A                 |
 
 ### Environment Setup
 
@@ -387,7 +372,6 @@ npm ci
 # Run development server
 npm run dev
 ```
-
 
 ### Package.json Scripts
 
@@ -405,29 +389,27 @@ npm run dev
 }
 ```
 
-
 ---
 
 ## 📊 Performance Metrics
 
 ### Deployment Performance
 
-| Metric | Target | Current | Status |
-| :-- | :-- | :-- | :-- |
-| **Build Time** | < 2 min | 1.3 min | ✅ |
-| **Test Execution** | < 30s | 22s | ✅ |
-| **Deployment Time** | < 3 min | 2.1 min | ✅ |
-| **Pipeline Success Rate** | > 95% | 98.2% | ✅ |
+| Metric                    | Target  | Current | Status |
+| :------------------------ | :------ | :------ | :----- |
+| **Build Time**            | < 2 min | 1.3 min | ✅     |
+| **Test Execution**        | < 30s   | 22s     | ✅     |
+| **Deployment Time**       | < 3 min | 2.1 min | ✅     |
+| **Pipeline Success Rate** | > 95%   | 98.2%   | ✅     |
 
 ### Application Performance
 
-| Metric | Target | Current | Status |
-| :-- | :-- | :-- | :-- |
-| **Page Load Time** | < 3s | 2.1s | ✅ |
-| **First Contentful Paint** | < 2s | 1.8s | ✅ |
-| **Game Start Latency** | < 1s | 0.8s | ✅ |
-| **Error Rate** | < 1% | 0.3% | ✅ |
-
+| Metric                     | Target | Current | Status |
+| :------------------------- | :----- | :------ | :----- |
+| **Page Load Time**         | < 3s   | 2.1s    | ✅     |
+| **First Contentful Paint** | < 2s   | 1.8s    | ✅     |
+| **Game Start Latency**     | < 1s   | 0.8s    | ✅     |
+| **Error Rate**             | < 1%   | 0.3%    | ✅     |
 
 ---
 
@@ -465,7 +447,6 @@ npm run lint:fix
 npx eslint src/game.js --fix
 ```
 
-
 #### Test Failures
 
 ```bash
@@ -475,7 +456,6 @@ npm run test:watch
 # Run tests with verbose output
 npm test -- --verbose
 ```
-
 
 #### Deployment Failures
 
@@ -493,7 +473,6 @@ nvm install 18
 nvm use 18
 ```
 
-
 #### Dependency Issues
 
 ```bash
@@ -503,7 +482,6 @@ npm cache clean --force
 npm install
 ```
 
-
 ---
 
 ## 🎯 Best Practices
@@ -511,19 +489,19 @@ npm install
 ### Development Workflow
 
 1. **Feature Development**
-    - Create feature branch from main
-    - Write tests first (TDD approach)
-    - Ensure all quality gates pass locally
-    - Submit PR with descriptive title and description
+   - Create feature branch from main
+   - Write tests first (TDD approach)
+   - Ensure all quality gates pass locally
+   - Submit PR with descriptive title and description
 2. **Code Quality**
-    - Follow ESLint configuration
-    - Use Prettier for consistent formatting
-    - Maintain test coverage above 80%
-    - Document complex functions with JSDoc
+   - Follow ESLint configuration
+   - Use Prettier for consistent formatting
+   - Maintain test coverage above 80%
+   - Document complex functions with JSDoc
 3. **Commit Messages**
-    - Use conventional commit format
-    - Include clear, descriptive messages
-    - Reference issue numbers when applicable
+   - Use conventional commit format
+   - Include clear, descriptive messages
+   - Reference issue numbers when applicable
 
 ### Performance Optimization
 
@@ -545,14 +523,12 @@ npm install
 - Monitor performance metrics
 - Check error logs
 
-
 #### Monthly
 
 - Update minor version dependencies
 - Review security audit results
 - Update documentation
 - Analyze user feedback
-
 
 #### Quarterly
 
@@ -561,19 +537,17 @@ npm install
 - Security penetration testing
 - Architecture review
 
-
 ### Dependency Management
 
 ```json
 {
   "scripts": {
     "deps:check": "npm outdated",
-    "deps:update": "npm update", 
+    "deps:update": "npm update",
     "deps:audit": "npm audit && npm audit fix"
   }
 }
 ```
-
 
 ### Version Management
 
@@ -623,8 +597,8 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ---
 
-*Last Updated: June 18, 2025*
-*Documentation Version: 2.0.0*
+_Last Updated: June 18, 2025_
+_Documentation Version: 2.0.0_
 
 <div style="text-align: center">⁂</div>
 
@@ -633,7 +607,6 @@ This project is licensed under the MIT License. See the LICENSE file for details
 [^1_2]: main-pipeline.yml
 
 [^1_3]: game.js.html
-
 
 ---
 
@@ -670,7 +643,6 @@ A comprehensive JavaScript Blackjack game with automated testing, quality assura
 - **Hosting**: Netlify (Frontend)
 - **Version Control**: Git with simplified branch strategy
 
-
 ### Key Features
 
 - Automated code quality enforcement with ESLint and Prettier[^2_1]
@@ -689,40 +661,38 @@ A comprehensive JavaScript Blackjack game with automated testing, quality assura
 graph TD
     A[👨‍💻 Developer] -->|Push/PR| B[📦 GitHub Repository]
     B --> C{🌿 Branch Type?}
-    
+
     C -->|main| D[🚀 CI Pipeline]
     C -->|feature/*| E[🔍 PR Validation]
-    
+
     D --> F[📋 Code Quality Gates]
     F --> G[🔍 ESLint Check]
     F --> H[🎨 Prettier Format]
     F --> I[🔒 Security Audit]
     F --> J[🧪 Jest Tests + Coverage]
-    
+
     J -->|✅ Pass| K[🌐 Deploy to Netlify]
     J -->|❌ Fail| L[🚫 Block Deployment]
-    
+
     K --> M[🔍 Deployment Health Check]
     M -->|✅ Success| N[✅ Production Live]
     M -->|❌ Fail| O[🔄 Rollback]
-    
+
     N --> P[📊 Monitoring & Analytics]
     P --> Q[📈 Performance Metrics]
     P --> R[🚨 Error Tracking]
 ```
 
-
 ### Infrastructure Components
 
-| Component | Purpose | Technology |
-| :-- | :-- | :-- |
-| **Source Control** | Code versioning and collaboration | GitHub[^2_1] |
-| **CI Runner** | Automated testing and validation | GitHub Actions (Ubuntu)[^2_2] |
-| **Quality Gates** | Code standards enforcement | ESLint, Prettier, Jest[^2_1] |
-| **Security Scanner** | Vulnerability detection | npm audit[^2_1] |
-| **Deployment Platform** | Production hosting | Netlify CDN[^2_1] |
-| **Monitoring** | Performance and error tracking | Netlify Analytics[^2_1] |
-
+| Component               | Purpose                           | Technology                    |
+| :---------------------- | :-------------------------------- | :---------------------------- |
+| **Source Control**      | Code versioning and collaboration | GitHub[^2_1]                  |
+| **CI Runner**           | Automated testing and validation  | GitHub Actions (Ubuntu)[^2_2] |
+| **Quality Gates**       | Code standards enforcement        | ESLint, Prettier, Jest[^2_1]  |
+| **Security Scanner**    | Vulnerability detection           | npm audit[^2_1]               |
+| **Deployment Platform** | Production hosting                | Netlify CDN[^2_1]             |
+| **Monitoring**          | Performance and error tracking    | Netlify Analytics[^2_1]       |
 
 ---
 
@@ -746,27 +716,25 @@ gitGraph
     commit id: "Auto-deploy to production"
 ```
 
-
 ### Branch Protection Rules
 
 #### Main Branch (`main`)
 
 - **Purpose**: Primary development and production branch[^2_1]
 - **Protection Rules**:
-    - Require pull request reviews (1 reviewer minimum)[^2_2]
-    - Require status checks to pass before merging[^2_2]
-    - Require branches to be up to date before merging[^2_2]
-    - Restrict direct pushes[^2_2]
+  - Require pull request reviews (1 reviewer minimum)[^2_2]
+  - Require status checks to pass before merging[^2_2]
+  - Require branches to be up to date before merging[^2_2]
+  - Restrict direct pushes[^2_2]
 - **Auto-deployment**: Successful CI runs trigger automatic deployment to Netlify[^2_1]
-
 
 #### Feature Branches (`feature/*`, `bugfix/*`, `hotfix/*`)
 
 - **Purpose**: Isolated development environments[^2_1]
 - **Naming Convention**:
-    - `feature/description` - New features[^2_1]
-    - `bugfix/issue-number` - Bug fixes[^2_1]
-    - `hotfix/critical-issue` - Production hotfixes[^2_1]
+  - `feature/description` - New features[^2_1]
+  - `bugfix/issue-number` - Bug fixes[^2_1]
+  - `hotfix/critical-issue` - Production hotfixes[^2_1]
 - **Lifecycle**: Created from `main`, merged back to `main` via PR[^2_1]
 
 ---
@@ -807,7 +775,6 @@ steps:
 - All unit tests must pass[^2_2]
 - Code coverage reports generated[^2_2]
 
-
 #### Stage 2: Frontend Deployment (`deploy-frontend`)
 
 ```yaml
@@ -826,7 +793,6 @@ steps:
 - Deploys to Netlify using GitHub Actions integration[^2_2]
 - Performs health checks post-deployment[^2_2]
 
-
 #### Stage 3: Production Merge (`automerge-to-production`)
 
 ```yaml
@@ -844,7 +810,6 @@ steps:
 - Performs non-fast-forward merge to maintain history[^2_2]
 - Triggers additional production workflows if configured[^2_2]
 
-
 ### Pipeline Execution Flow
 
 ```mermaid
@@ -853,11 +818,11 @@ sequenceDiagram
     participant GH as GitHub
     participant CI as CI Pipeline
     participant Netlify as Netlify
-    
+
     Dev->>GH: Push to main
     GH->>CI: Trigger test-and-verify
     CI->>CI: Run ESLint, Prettier, Tests
-    
+
     alt Tests Pass
         CI->>Netlify: Deploy frontend
         Netlify->>CI: Deployment success
@@ -868,7 +833,6 @@ sequenceDiagram
     end
 ```
 
-
 ---
 
 ## 🧪 Testing \& Code Coverage
@@ -877,13 +841,12 @@ sequenceDiagram
 
 Based on the coverage report from `game.js.html`, the current test coverage metrics are[^2_3]:
 
-
-| Metric | Coverage | Status |
-| :-- | :-- | :-- |
-| **Lines** | 87.4% | ✅ Good |
-| **Functions** | 89.2% | ✅ Good |
-| **Branches** | 84.1% | ✅ Good |
-| **Statements** | 88.7% | ✅ Good |
+| Metric         | Coverage | Status  |
+| :------------- | :------- | :------ |
+| **Lines**      | 87.4%    | ✅ Good |
+| **Functions**  | 89.2%    | ✅ Good |
+| **Branches**   | 84.1%    | ✅ Good |
+| **Statements** | 88.7%    | ✅ Good |
 
 ### Coverage Breakdown by Function
 
@@ -894,7 +857,6 @@ The coverage report shows comprehensive testing of core game functions[^2_3]:
 - **Betting system**: Well covered (88.9%)[^2_3]
 - **Game state management**: Good coverage (85.4%)[^2_3]
 - **Win/lose conditions**: Comprehensive coverage (95.7%)[^2_3]
-
 
 ### Test Configuration
 
@@ -918,7 +880,6 @@ The coverage report shows comprehensive testing of core game functions[^2_3]:
 }
 ```
 
-
 ### Coverage Reporting
 
 The pipeline automatically generates and uploads coverage reports[^2_2]:
@@ -941,13 +902,11 @@ Based on the game implementation in `game.js`, the Blackjack game includes[^2_3]
 - **Hand Management**: Handle player cards and calculate hand values[^2_3]
 - **Action Handling**: Process hit, stand, double, insurance, and surrender actions[^2_3]
 
-
 #### Dealer (Bank) Logic
 
 - **Automated Play**: Dealer follows standard Blackjack rules (hit on <17, stand on ≥17)[^2_3]
 - **Card Distribution**: Manages card dealing and face-up/face-down logic[^2_3]
 - **Blackjack Detection**: Identifies natural 21s for both player and dealer[^2_3]
-
 
 #### Game Flow Control
 
@@ -980,7 +939,7 @@ deckValue(deck) {
       total += card.value;
     }
   });
-  
+
   // Adjust for soft Aces
   while (total > 21 && aces > 0) {
     total -= 10;
@@ -989,7 +948,6 @@ deckValue(deck) {
   return total;
 }
 ```
-
 
 ### Game Features
 
@@ -1004,12 +962,12 @@ deckValue(deck) {
 
 ### Required GitHub Secrets
 
-| Secret | Purpose | Required Scopes |
-| :-- | :-- | :-- |
-| `NETLIFY_AUTH_TOKEN` | Netlify deployment authentication | Deploy, Build hooks[^2_2] |
-| `NETLIFY_SITE_ID` | Target Netlify site identifier | Site management[^2_2] |
-| `GH_PAT` | GitHub Personal Access Token | repo, workflow[^2_2] |
-| `PRODUCTION_API_URL` | Backend API endpoint for production | N/A[^2_2] |
+| Secret               | Purpose                             | Required Scopes           |
+| :------------------- | :---------------------------------- | :------------------------ |
+| `NETLIFY_AUTH_TOKEN` | Netlify deployment authentication   | Deploy, Build hooks[^2_2] |
+| `NETLIFY_SITE_ID`    | Target Netlify site identifier      | Site management[^2_2]     |
+| `GH_PAT`             | GitHub Personal Access Token        | repo, workflow[^2_2]      |
+| `PRODUCTION_API_URL` | Backend API endpoint for production | N/A[^2_2]                 |
 
 ### Environment Setup
 
@@ -1024,7 +982,6 @@ npm ci
 # Run development server
 npm run dev
 ```
-
 
 ### Package.json Scripts
 
@@ -1042,29 +999,27 @@ npm run dev
 }
 ```
 
-
 ---
 
 ## 📊 Performance Metrics
 
 ### Deployment Performance
 
-| Metric | Target | Current | Status |
-| :-- | :-- | :-- | :-- |
-| **Build Time** | < 2 min | 1.3 min | ✅ |
-| **Test Execution** | < 30s | 22s | ✅ |
-| **Deployment Time** | < 3 min | 2.1 min | ✅ |
-| **Pipeline Success Rate** | > 95% | 98.2% | ✅ |
+| Metric                    | Target  | Current | Status |
+| :------------------------ | :------ | :------ | :----- |
+| **Build Time**            | < 2 min | 1.3 min | ✅     |
+| **Test Execution**        | < 30s   | 22s     | ✅     |
+| **Deployment Time**       | < 3 min | 2.1 min | ✅     |
+| **Pipeline Success Rate** | > 95%   | 98.2%   | ✅     |
 
 ### Application Performance
 
-| Metric | Target | Current | Status |
-| :-- | :-- | :-- | :-- |
-| **Page Load Time** | < 3s | 2.1s | ✅ |
-| **First Contentful Paint** | < 2s | 1.8s | ✅ |
-| **Game Start Latency** | < 1s | 0.8s | ✅ |
-| **Error Rate** | < 1% | 0.3% | ✅ |
-
+| Metric                     | Target | Current | Status |
+| :------------------------- | :----- | :------ | :----- |
+| **Page Load Time**         | < 3s   | 2.1s    | ✅     |
+| **First Contentful Paint** | < 2s   | 1.8s    | ✅     |
+| **Game Start Latency**     | < 1s   | 0.8s    | ✅     |
+| **Error Rate**             | < 1%   | 0.3%    | ✅     |
 
 ---
 
@@ -1102,7 +1057,6 @@ npm run lint:fix
 npx eslint src/game.js --fix
 ```
 
-
 #### Test Failures
 
 ```bash
@@ -1112,7 +1066,6 @@ npm run test:watch
 # Run tests with verbose output
 npm test -- --verbose
 ```
-
 
 #### Deployment Failures
 
@@ -1130,7 +1083,6 @@ nvm install 18
 nvm use 18
 ```
 
-
 #### Dependency Issues
 
 ```bash
@@ -1140,7 +1092,6 @@ npm cache clean --force
 npm install
 ```
 
-
 ---
 
 ## 🎯 Best Practices
@@ -1148,19 +1099,19 @@ npm install
 ### Development Workflow
 
 1. **Feature Development**
-    - Create feature branch from main[^2_1]
-    - Write tests first (TDD approach)[^2_1]
-    - Ensure all quality gates pass locally[^2_1]
-    - Submit PR with descriptive title and description[^2_1]
+   - Create feature branch from main[^2_1]
+   - Write tests first (TDD approach)[^2_1]
+   - Ensure all quality gates pass locally[^2_1]
+   - Submit PR with descriptive title and description[^2_1]
 2. **Code Quality**
-    - Follow ESLint configuration[^2_1]
-    - Use Prettier for consistent formatting[^2_1]
-    - Maintain test coverage above 80%[^2_1]
-    - Document complex functions with JSDoc[^2_1]
+   - Follow ESLint configuration[^2_1]
+   - Use Prettier for consistent formatting[^2_1]
+   - Maintain test coverage above 80%[^2_1]
+   - Document complex functions with JSDoc[^2_1]
 3. **Commit Messages**
-    - Use conventional commit format[^2_1]
-    - Include clear, descriptive messages[^2_1]
-    - Reference issue numbers when applicable[^2_1]
+   - Use conventional commit format[^2_1]
+   - Include clear, descriptive messages[^2_1]
+   - Reference issue numbers when applicable[^2_1]
 
 ### Performance Optimization
 
@@ -1182,14 +1133,12 @@ npm install
 - Monitor performance metrics[^2_1]
 - Check error logs[^2_1]
 
-
 #### Monthly
 
 - Update minor version dependencies[^2_1]
 - Review security audit results[^2_1]
 - Update documentation[^2_1]
 - Analyze user feedback[^2_1]
-
 
 #### Quarterly
 
@@ -1198,19 +1147,17 @@ npm install
 - Security penetration testing[^2_1]
 - Architecture review[^2_1]
 
-
 ### Dependency Management
 
 ```json
 {
   "scripts": {
     "deps:check": "npm outdated",
-    "deps:update": "npm update", 
+    "deps:update": "npm update",
     "deps:audit": "npm audit && npm audit fix"
   }
 }
 ```
-
 
 ### Version Management
 
@@ -1260,8 +1207,8 @@ This project is licensed under the MIT License[^2_1]. See the LICENSE file for d
 
 ---
 
-*Last Updated: June 18, 2025*
-*Documentation Version: 2.0.0*
+_Last Updated: June 18, 2025_
+_Documentation Version: 2.0.0_
 
 <div style="text-align: center">⁂</div>
 
@@ -1270,4 +1217,3 @@ This project is licensed under the MIT License[^2_1]. See the LICENSE file for d
 [^2_2]: main-pipeline.yml
 
 [^2_3]: game.js.html
-
