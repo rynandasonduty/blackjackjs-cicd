@@ -214,7 +214,6 @@ gantt
 ```mermaid
 gitGraph
     commit id: "Initial Setup"
-    checkout main
     commit id: "Add CI Pipeline"
     branch feature/game-logic
     checkout feature/game-logic
