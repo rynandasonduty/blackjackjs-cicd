@@ -258,12 +258,12 @@ gitGraph
     commit id: "Implement card logic"
     commit id: "Add unit tests"
     checkout main
-    merge feature/game-logic
+    merge feature/game-logic id: "Merge Feature"
     commit id: "CI: Tests Pass"
     commit id: "Frontend Deployed"
     branch production
     checkout production
-    merge main
+    merge feature/game-logic id: "Deploy to Production"
     commit id: "Production v1.0"
     commit id: "Backend Deployed"
 ```
