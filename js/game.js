@@ -57,7 +57,7 @@ function init() {
       init() {
         this.text = new createjs.Text(
           messages.bet,
-          'bold 40px \'Arial\', sans-serif',
+          "bold 40px 'Arial', sans-serif",
           '#FFD700'
         );
         this.text.x = 850;
@@ -70,7 +70,7 @@ function init() {
     _alert(msg) {
       const alertText = new createjs.Text(
         msg.msg,
-        'bold 30px \'Arial\', sans-serif',
+        "bold 30px 'Arial', sans-serif",
         'orange'
       );
       alertText.x = msg.x || 745;
@@ -99,7 +99,7 @@ function init() {
       stage.removeAllChildren();
       const gameOverText = new createjs.Text(
         'GAME OVER, STOP ONLINE GAMBLING',
-        'bold 40px \'Arial\'',
+        "bold 40px 'Arial'",
         '#FF0000'
       );
       gameOverText.textAlign = 'center';
@@ -190,7 +190,7 @@ function init() {
 
       const resultText = new createjs.Text(
         message,
-        'bold 32px \'Arial\', sans-serif',
+        "bold 32px 'Arial', sans-serif",
         '#FFFFFF'
       );
       resultText.textAlign = 'center';
@@ -254,7 +254,7 @@ function init() {
         this.startContainer = new createjs.Container();
         const titleText = new createjs.Text(
           'BlackJackJs',
-          'bold 70px \'Arial\', sans-serif',
+          "bold 70px 'Arial', sans-serif",
           '#FFD700'
         );
         titleText.center(1, 1);
@@ -292,7 +292,7 @@ function init() {
     start() {
       player.name.text = new createjs.Text(
         player.name.value,
-        'bold 30px \'Arial\', sans-serif',
+        "bold 30px 'Arial', sans-serif",
         '#FFFFFF'
       );
       player.name.text.center();
@@ -788,7 +788,7 @@ function init() {
       init() {
         this.text = new createjs.Text(
           player.funds,
-          'bold 30px \'Arial\', sans-serif',
+          "bold 30px 'Arial', sans-serif",
           '#FFFFFF'
         );
         this.text.x = 880;

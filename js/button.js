@@ -29,7 +29,7 @@ class Button {
     this.onclick = onclick;
     this.width = 150;
     this.height = 50;
-    this.font = 'bold 24px \'Arial\', sans-serif';
+    this.font = "bold 24px 'Arial', sans-serif";
     this.textColor = '#FFFFFF';
     this.depth = 5;
   }
