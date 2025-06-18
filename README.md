@@ -604,39 +604,44 @@ This report is generated using **Istanbul.js**, a code coverage analysis tool fo
 
 The pie chart below illustrates the coverage levels across the four main metrics, offering a quick overview of the current testing status.
 
-````mermaid
+```mermaid
 pie
     title Code Coverage Summary for game.js
     "Statements" : 38.97
     "Branches" : 21.53
     "Functions" : 27.84
     "Lines" : 38.99
+```
 
 ### Detailed Summary for `game.js`
+
 Here is the latest test coverage status for the main game logic file (`game.js`), generated on June 18, 2025.
 
-| Category | Coverage Percentage | Details (Covered/Total) |
-| :--- | :---: | :---: |
-| **Statements** | 38.97% | 205 / 526 |
-| **Branches** | 21.53% | 59 / 274 |
-| **Functions** | 27.84% | 22 / 79 |
-| **Lines** | 38.99% | 202 / 518 |
+| Category       | Coverage Percentage | Details (Covered/Total) |
+| :------------- | :-----------------: | :---------------------: |
+| **Statements** |       38.97%        |        205 / 526        |
+| **Branches**   |       21.53%        |        59 / 274         |
+| **Functions**  |       27.84%        |         22 / 79         |
+| **Lines**      |       38.99%        |        202 / 518        |
 
 ---
 
 ### Explanation and Analysis
 
 #### What Do These Metrics Mean?
-* **Statements**: The percentage of JavaScript statements (e.g., `var x = 1;`, `return;`) that were executed by the tests.
-* **Branches**: The percentage of conditional logic paths (like an `if` or `else` block) that have been followed during tests. This is a critical metric for logical correctness.
-* **Functions**: The percentage of functions that have been called at least once during testing.
-* **Lines**: Similar to statements, this measures the percentage of executable lines of code that have been run.
+
+- **Statements**: The percentage of JavaScript statements (e.g., `var x = 1;`, `return;`) that were executed by the tests.
+- **Branches**: The percentage of conditional logic paths (like an `if` or `else` block) that have been followed during tests. This is a critical metric for logical correctness.
+- **Functions**: The percentage of functions that have been called at least once during testing.
+- **Lines**: Similar to statements, this measures the percentage of executable lines of code that have been run.
 
 #### Current Analysis
+
 The report above indicates that the test coverage for the `game.js` file is still low (below 40%). In particular, the coverage for **Branches** (21.53%) is very low, meaning many conditional scenarios (if/else logic) in the game remain untested.
 
 **Recommended Actions:**
 Improving code coverage is a priority to ensure the game's stability and reliability. The development team should focus on:
+
 1.  Writing new unit tests for functions that are not tested at all.
 2.  Adding test cases that cover various logical paths (e.g., win, lose, draw, double, and insurance scenarios).
 3.  Ensuring that every bug fix is accompanied by a new test to prevent regressions.
@@ -644,9 +649,10 @@ Improving code coverage is a priority to ensure the game's stability and reliabi
 ---
 
 ### How to Run the Coverage Test
+
 To generate this report locally and view the interactive version, run the following command from the project's root directory:
 
-```bash
+````bash
 # A common example using Jest or a similar framework
 npm test -- --coverage
 
