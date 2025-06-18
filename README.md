@@ -212,35 +212,23 @@ gantt
 ### System Architecture
 
 ```mermaid
-graph TD
-    A[Developer] -->|Push/PR| B[GitHub Repository]
-    B --> C{Event Type?}
-    C -->|Push to main| D[Full CI/CD Pipeline]
-    C -->|Pull Request| E[Validation Only]
-
-    D --> F[Test & Verify Job]
-    F --> G[Quality Gates]
-    G --> H[ESLint Check]
-    G --> I[Prettier Check]
-    G --> J[Security Audit]
-    G --> K[Unit Tests + Coverage]
-
-    K -->|All Pass| L[Deploy Frontend Job]
-    K -->|Fail| M[Block Pipeline]
-
-    L --> N[Build Frontend]
-    N --> O[Deploy to Netlify]
-    O --> P{Deploy Success?}
-    P -->|Yes| Q[Auto-merge Job]
-    P -->|No| R[Pipeline Failed]
-
-    Q --> S[Merge main → production]
-    S --> T[Backend Auto-Deploy]
-    T --> U[Production Environment]
-
-    U --> V[Monitoring]
-    V --> W[Performance Tracking]
-    V --> X[Error Monitoring]
+gitGraph
+    commit id: "Initial Setup"
+    checkout main
+    commit id: "Add CI Pipeline"
+    branch feature/game-logic
+    checkout feature/game-logic
+    commit id: "Implement card logic"
+    commit id: "Add unit tests"
+    checkout main
+    merge feature/game-logic
+    commit id: "CI: Tests Pass"
+    commit id: "Frontend Deployed"
+    branch production
+    checkout production
+    merge main
+    commit id: "Production v1.0"
+    commit id: "Backend Deployed"
 ```
 
 ---
@@ -953,7 +941,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Performance Metrics
 
-- **Lighthouse Score**: 95+/100
 - **Bundle Size**: < 500KB
 - **Load Time**: < 3 seconds
 - **Uptime**: 99.8%
